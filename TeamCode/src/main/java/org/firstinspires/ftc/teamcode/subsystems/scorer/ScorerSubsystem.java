@@ -17,11 +17,11 @@ public class ScorerSubsystem extends SubsystemBase implements LoggerSubsystem {
     private final DataLogger dataLogger;
 
     public ScorerSubsystem(HardwareMap hardwareMap, MultipleTelemetry telemetry, DataLogger dataLogger) {
+        dataLogger.addData(DataLogger.DataType.INFO, "Initializing ScorerSubsystem.");
+
         this.servo = new SympleServo(hardwareMap, ServoMap.SCORER.getId(), 0, 300);
         this.telemetry = telemetry;
         this.dataLogger = dataLogger;
-
-        this.dataLogger.addData(DataLogger.DataType.INFO, "Initializing ScorerSubsystem.");
     }
 
     private void setState(ScorerState state) {

@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.subsystems.elevator;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.command.Command;
+import com.arcrobotics.ftclib.command.FunctionalCommand;
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -16,22 +19,33 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggerSubsystem 
     private final DataLogger dataLogger;
 
     public ElevatorSubsystem(HardwareMap hardwareMap, MultipleTelemetry telemetry, DataLogger dataLogger) {
-        MotorEx motor = new MotorEx(hardwareMap, MotorMap.ELEVATOR_RIGHT.getId());
-        motor.setInverted(true);
+        dataLogger.addData(DataLogger.DataType.INFO, "Initializing ElevatorSubsystem.");
 
-        this.motors = new MotorGroup(
-                new MotorEx(hardwareMap, MotorMap.ELEVATOR_LEFT.getId()),
-                motor
-        );
         this.telemetry = telemetry;
         this.dataLogger = dataLogger;
 
-        this.dataLogger.addData(DataLogger.DataType.INFO, "Initializing ElevatorSubsystem.");
+        MotorEx rightMotor = new MotorEx(hardwareMap, MotorMap.ELEVATOR_RIGHT.getId());
+        MotorEx leftMotor = new MotorEx(hardwareMap, MotorMap.ELEVATOR_LEFT.getId());
+
+        rightMotor.setInverted(true);
+
+        this.motors = new MotorGroup(leftMotor, rightMotor);
+
+        this.motors.resetEncoder();
     }
 
     private void setPower(double power) {
         this.motors.set(power + ElevatorConstants.KG);
     }
+
+    /**
+     * @return The current position in meters
+     */
+    private double getCurrentPosition() {
+        double leaderMotorPosition = this.motors.getPositions().get(0);
+        return leaderMotorPosition * ElevatorConstants.METERS_PER_TICK;
+    }
+
 
     @Override
     public DataLogger getDataLogger() {
@@ -41,6 +55,27 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggerSubsystem 
     @Override
     public MultipleTelemetry getTelemetry() {
         return telemetry;
+    }
+
+    public Command goToState(ElevatorState state) {
+        PIDController pidController = new PIDController(0, 0, 0);
+        pidController.setTolerance(0.03);
+
+        return new FunctionalCommand(
+                // init
+                () -> {
+                    pidController.setSetPoint(state.getMeters());
+                },
+                // execute
+                () -> {
+                    double power = pidController.calculate(this.getCurrentPosition());
+                    this.setPower(power);
+                },
+                // end
+                (interrupted) -> {},
+                pidController::atSetPoint,
+                this
+        );
     }
 
     public enum ElevatorState {

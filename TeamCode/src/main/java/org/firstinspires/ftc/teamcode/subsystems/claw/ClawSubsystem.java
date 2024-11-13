@@ -17,10 +17,10 @@ public class ClawSubsystem extends SubsystemBase implements LoggerSubsystem {
     private final DataLogger dataLogger;
 
     public ClawSubsystem(HardwareMap hardwareMap, MultipleTelemetry telemetry, DataLogger dataLogger) {
+        dataLogger.addData(DataLogger.DataType.INFO, "Initializing ClawSubsystem.");
+
         this.telemetry = telemetry;
         this.dataLogger = dataLogger;
-
-        this.dataLogger.addData(DataLogger.DataType.INFO, "Initializing ClawSubsystem.");
 
         this.servo = new SympleServo(hardwareMap, ServoMap.CLAW.getId(), 0, 300);
     }

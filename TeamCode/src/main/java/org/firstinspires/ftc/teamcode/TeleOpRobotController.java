@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.arcrobotics.ftclib.command.Command;
-import com.arcrobotics.ftclib.command.Subsystem;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -10,19 +8,18 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.subsystems.claw.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.commands.mecanumDrive.MecanumArcadeDriveCommand;
+import org.firstinspires.ftc.teamcode.subsystems.elevator.ElevatorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.scorer.ScorerSubsystem;
 import org.firstinspires.ftc.teamcode.util.TeamColor;
 import org.firstinspires.ftc.teamcode.util.opModes.SympleCommandOpMode;
-
-import java.util.Collections;
-import java.util.Set;
 
 public class TeleOpRobotController extends RobotControllerBase {
     private final MecanumDriveSubsystem mecanumDriveSubsystem;
     private final ClawSubsystem clawSubsystem;
     private final ScorerSubsystem scorerSubsystem;
     private final IntakeSubsystem intakeSubsystem;
+    private final ElevatorSubsystem elevatorSubsystem;
 
     private TeleOpRobotController(HardwareMap hMap, Telemetry telemetry, Gamepad driverController, Gamepad actionController, TeamColor teamColor, String logFilePrefix, boolean logData) {
         super(hMap, telemetry, driverController, actionController, logFilePrefix, logData);
@@ -37,11 +34,32 @@ public class TeleOpRobotController extends RobotControllerBase {
         this.clawSubsystem = new ClawSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
         this.scorerSubsystem = new ScorerSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
         this.intakeSubsystem = new IntakeSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
+        this.elevatorSubsystem = new ElevatorSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
     }
 
     @Override
     public void createKeyBindings() {
+        this.actionController.getGamepadButton(GamepadKeys.Button.A)
+                .toggleWhenPressed(
+                        this.clawSubsystem.moveToState(ClawSubsystem.ClawState.CLOSE),
+                        this.clawSubsystem.moveToState(ClawSubsystem.ClawState.OPEN)
+                );
 
+        this.actionController.getGamepadButton(GamepadKeys.Button.B)
+                .toggleWhenPressed(
+                        this.scorerSubsystem.moveToState(ScorerSubsystem.ScorerState.TAKE),
+                        this.scorerSubsystem.moveToState(ScorerSubsystem.ScorerState.SCORE)
+                );
+
+        this.actionController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+                .whenPressed(
+                        this.intakeSubsystem.toggleState(IntakeSubsystem.IntakeState.TAKE)
+                );
+
+        this.actionController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenPressed(
+                        this.intakeSubsystem.toggleState(IntakeSubsystem.IntakeState.DROP)
+                );
     }
 
     @Override
