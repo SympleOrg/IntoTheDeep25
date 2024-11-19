@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.subsystems.claw.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.commands.mecanumDrive.MecanumArcadeDriveCommand;
 import org.firstinspires.ftc.teamcode.subsystems.elevator.ElevatorSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.extender.ExtenderSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.scorer.ScorerSubsystem;
 import org.firstinspires.ftc.teamcode.util.TeamColor;
@@ -20,6 +21,7 @@ public class TeleOpRobotController extends RobotControllerBase {
     private final ScorerSubsystem scorerSubsystem;
     private final IntakeSubsystem intakeSubsystem;
     private final ElevatorSubsystem elevatorSubsystem;
+    private final ExtenderSubsystem extenderSubsystem;
 
     private TeleOpRobotController(HardwareMap hMap, Telemetry telemetry, Gamepad driverController, Gamepad actionController, TeamColor teamColor, String logFilePrefix, boolean logData) {
         super(hMap, telemetry, driverController, actionController, logFilePrefix, logData);
@@ -35,6 +37,7 @@ public class TeleOpRobotController extends RobotControllerBase {
         this.scorerSubsystem = new ScorerSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
         this.intakeSubsystem = new IntakeSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
         this.elevatorSubsystem = new ElevatorSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
+        this.extenderSubsystem = new ExtenderSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
     }
 
     @Override

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.subsystems.elevator;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.FunctionalCommand;
+import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
@@ -32,6 +33,8 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggerSubsystem 
         this.motors = new MotorGroup(leftMotor, rightMotor);
 
         this.motors.resetEncoder();
+
+        this.setDefaultCommand(this.holdElevator());
     }
 
     private void setPower(double power) {
@@ -57,13 +60,18 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggerSubsystem 
         return telemetry;
     }
 
+    public Command holdElevator() {
+        return new RunCommand(() -> this.setPower(0));
+    }
+
     public Command goToState(ElevatorState state) {
         PIDController pidController = new PIDController(0, 0, 0);
-        pidController.setTolerance(0.03);
 
         return new FunctionalCommand(
                 // init
                 () -> {
+                    pidController.reset();
+                    pidController.setTolerance(0.03);
                     pidController.setSetPoint(state.getMeters());
                 },
                 // execute
