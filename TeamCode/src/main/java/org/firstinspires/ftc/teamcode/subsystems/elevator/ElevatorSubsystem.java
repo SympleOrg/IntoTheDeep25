@@ -61,7 +61,7 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggerSubsystem 
     }
 
     public Command holdElevator() {
-        return new RunCommand(() -> this.setPower(0));
+        return new RunCommand(() -> this.setPower(0), this);
     }
 
     public Command goToState(ElevatorState state) {

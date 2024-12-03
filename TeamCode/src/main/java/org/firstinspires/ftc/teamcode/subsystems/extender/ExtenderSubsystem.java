@@ -2,20 +2,18 @@ package org.firstinspires.ftc.teamcode.subsystems.extender;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.Command;
-import com.arcrobotics.ftclib.command.FunctionalCommand;
-import com.arcrobotics.ftclib.command.RunCommand;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SubsystemBase;
-import com.arcrobotics.ftclib.controller.PIDController;
-import com.arcrobotics.ftclib.hardware.motors.MotorEx;
+import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.maps.MotorMap;
+import org.firstinspires.ftc.teamcode.maps.ServoMap;
 import org.firstinspires.ftc.teamcode.util.DataLogger;
 import org.firstinspires.ftc.teamcode.util.LoggerSubsystem;
-import org.firstinspires.ftc.teamcode.util.MathUtil;
+import top.symple.symplegraphdisplay.managers.data.DataListenerGroup;
 
-public class ExtenderSubsystem extends SubsystemBase implements LoggerSubsystem {
-    private final MotorEx motor;
+public class ExtenderSubsystem extends SubsystemBase implements LoggerSubsystem, DataListenerGroup {
+    private final SimpleServo servo;
     private final MultipleTelemetry telemetry;
     private final DataLogger dataLogger;
 
@@ -25,24 +23,11 @@ public class ExtenderSubsystem extends SubsystemBase implements LoggerSubsystem 
         this.telemetry = telemetry;
         this.dataLogger = dataLogger;
 
-        this.motor = new MotorEx(hardwareMap, MotorMap.EXTENDER.getId());
-
-        this.motor.resetEncoder();
-
-        this.setDefaultCommand(this.holdPosition());
+        this.servo = new SimpleServo(hardwareMap, ServoMap.EXTENDER.getId(), 0, 300);
     }
 
-    private void moveMotor(double power) {
-        double ff = calcFeedForward();
-        this.motor.set(power + ff);
-    }
-
-    private double calcFeedForward() {
-        return Math.cos(Math.toRadians(this.getCurrentPosInDeg()));
-    }
-
-    private double getCurrentPosInDeg() {
-        return MathUtil.countsToDeg(this.motor.getCurrentPosition(), MotorMap.EXTENDER.getTicksPerRev());
+    private void turnToAngle(double deg) {
+        this.servo.turnToAngle(deg);
     }
 
     @Override
@@ -55,32 +40,12 @@ public class ExtenderSubsystem extends SubsystemBase implements LoggerSubsystem 
         return telemetry;
     }
 
-    public Command holdPosition() {
-        return new RunCommand(() -> this.moveMotor(0));
-    }
-
-    public Command goTo(ExtenderState state) {
-        PIDController pidController = new PIDController(0, 0, 0);
-
-        return new FunctionalCommand(
-                () -> {
-                    pidController.reset();
-                    pidController.setTolerance(1);
-                    pidController.setSetPoint(state.getDeg());
-                },
-                () -> {
-                    double power = pidController.calculate(this.getCurrentPosInDeg());
-
-                    this.moveMotor(power);
-                },
-                (interrupted) -> {},
-                pidController::atSetPoint,
-                this
-        );
+    public Command goToState(ExtenderState state) {
+        return new InstantCommand(() -> this.turnToAngle(state.getDeg()), this);
     }
 
     public enum ExtenderState {
-        PUT(0),
+        IDLE(0),
         TAKE(0);
 
         private final double deg;

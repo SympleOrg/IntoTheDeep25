@@ -54,6 +54,12 @@ public class TeleOpRobotController extends RobotControllerBase {
                         this.scorerSubsystem.moveToState(ScorerSubsystem.ScorerState.SCORE)
                 );
 
+        this.actionController.getGamepadButton(GamepadKeys.Button.Y)
+                .toggleWhenPressed(
+                        this.extenderSubsystem.goToState(ExtenderSubsystem.ExtenderState.IDLE),
+                        this.extenderSubsystem.goToState(ExtenderSubsystem.ExtenderState.TAKE)
+                );
+
         this.actionController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(
                         this.intakeSubsystem.toggleState(IntakeSubsystem.IntakeState.TAKE)
