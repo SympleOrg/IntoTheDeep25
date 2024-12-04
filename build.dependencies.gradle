@@ -1,8 +1,21 @@
+//"mavenUrls": [
+//        "https://3015rangerrobotics.github.io/pathplannerlib/repo"
+//],
+//"jsonUrl": "https://3015rangerrobotics.github.io/pathplannerlib/PathplannerLib.json",
+//"javaDependencies": [
+//        {
+//            "groupId": "com.pathplanner.lib",
+//            "artifactId": "PathplannerLib-java",
+//            "version": "2024.2.8"
+//        }
+//],
+
 repositories {
     mavenCentral()
     google() // Needed for androidx
     maven { url = 'https://maven.brott.dev/' }
     maven { url = "https://Symple25125:ghp_${new String("ozADyfsgVNxC2ujphTXAiEMPwQkUdR4LmPha")}@maven.pkg.github.com/SympleOrg/SympleGraphDisplay" }
+    maven { url = 'https://3015rangerrobotics.github.io/pathplannerlib/repo' }
 }
 
 dependencies {
@@ -16,6 +29,7 @@ dependencies {
     implementation 'org.firstinspires.ftc:Vision:10.1.1'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.acmerobotics.dashboard:dashboard:0.4.15'
+    implementation 'com.pathplanner.lib:PathplannerLib-java:2024.2.8'
 
     implementation 'top.symple:symplegraphdisplay:1.1.0'
 }
