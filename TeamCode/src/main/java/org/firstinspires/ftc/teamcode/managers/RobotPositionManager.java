@@ -1,7 +1,15 @@
 package org.firstinspires.ftc.teamcode.managers;
 
+import com.arcrobotics.ftclib.geometry.Pose2d;
+import com.arcrobotics.ftclib.geometry.Rotation2d;
+import com.arcrobotics.ftclib.geometry.Translation2d;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
+import com.arcrobotics.ftclib.kinematics.DifferentialOdometry;
+import com.arcrobotics.ftclib.kinematics.wpilibkinematics.ChassisSpeeds;
+import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveKinematics;
+import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveOdometry;
+import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveWheelSpeeds;
 import com.qualcomm.hardware.bosch.BHI260IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -18,6 +26,8 @@ public class RobotPositionManager {
     private final MotorEx leftDeadWheel;
     private final MotorEx backDeadWheel;
 
+    private final MecanumDriveOdometry odometry;
+
     private final double startingAngle;
 
     private static RobotPositionManager instance;
@@ -33,7 +43,20 @@ public class RobotPositionManager {
 
         this.rightDeadWheel.encoder.setDirection(Motor.Direction.REVERSE);
         this.leftDeadWheel.encoder.setDirection(Motor.Direction.REVERSE);
-//        this.rightDeadWheel.encoder.setDirection(Motor.Direction.REVERSE);
+
+        MecanumDriveKinematics mecanumDriveKinematics = new MecanumDriveKinematics(
+                new Translation2d(0.22585, 0.168),
+                new Translation2d(-0.22585, 0.168),
+                new Translation2d(0.22585, -0.168),
+                new Translation2d(-0.22585, -0.168)
+        );
+
+        this.odometry = new MecanumDriveOdometry(
+            mecanumDriveKinematics,
+            getHeadingByGyro2d(),
+            new Pose2d(0, 0, new Rotation2d())
+        );
+
 
         this.rightDeadWheel.resetEncoder();
         this.leftDeadWheel.resetEncoder();
@@ -46,12 +69,25 @@ public class RobotPositionManager {
         instance = new RobotPositionManager(hardwareMap);
     }
 
+    public void update() {
+        MecanumDriveWheelSpeeds wheelSpeeds = new MecanumDriveWheelSpeeds(
+
+        );
+
+        this.odometry.update();
+
+    }
+
     public static RobotPositionManager getInstance() {
         return instance;
     }
 
     public double getHeadingByGyro() {
         return this.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+    }
+
+    public Rotation2d getHeadingByGyro2d() {
+        return Rotation2d.fromDegrees(getHeadingByGyro());
     }
 
     public double getRelativeHeading() {
@@ -74,5 +110,19 @@ public class RobotPositionManager {
 
     public double getBackWheelDistanceDriven() {
         return MathUtil.encoderTicksToMeter(this.backDeadWheel.getCurrentPosition());
+    }
+
+    public Pose2d getPose() {
+        return this.odometry.getPoseMeters();
+    }
+
+    public void setPose(Pose2d pose) {
+        this.odometry.updateWithTime()updatePose(pose);
+    }
+
+    public ChassisSpeeds getChassisSpeeds() {
+        return new ChassisSpeeds(
+                this.backDeadWheel.get() * DriveConstants.
+        )
     }
 }

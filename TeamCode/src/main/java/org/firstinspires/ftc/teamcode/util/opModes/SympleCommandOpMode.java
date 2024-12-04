@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.util.opModes;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotControllerBase;
+import org.firstinspires.ftc.teamcode.managers.RobotPositionManager;
 
 import top.symple.symplegraphdisplay.SympleGraphDisplay;
 
@@ -36,6 +37,7 @@ public abstract class SympleCommandOpMode extends CommandOpMode {
         while (!isStopRequested() && opModeIsActive()) {
             this.run();
             robotController.run();
+            RobotPositionManager.getInstance().update();
             SympleGraphDisplay.getInstance().run();
         }
 

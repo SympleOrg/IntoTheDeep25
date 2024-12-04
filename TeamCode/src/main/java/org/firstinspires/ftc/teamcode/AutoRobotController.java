@@ -1,10 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.managers.RobotPositionManager;
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.MecanumDriveSubsystem;
+import org.firstinspires.ftc.teamcode.util.SymplePathplannerUtils;
 import org.firstinspires.ftc.teamcode.util.opModes.SympleCommandOpMode;
 
 public class AutoRobotController extends RobotControllerBase {
@@ -23,7 +26,11 @@ public class AutoRobotController extends RobotControllerBase {
 
     @Override
     public void initialize() {
-
+        AutoBuilder.configureLTV(
+                () -> SymplePathplannerUtils.toPose2d(RobotPositionManager.getInstance().getPose()),
+                pose2d -> RobotPositionManager.getInstance().setPose(SymplePathplannerUtils.toPose2d(pose2d)),
+                this.mecanumDriveSubsystem.getc
+        );
     }
 
     @Override

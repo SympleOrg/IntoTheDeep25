@@ -1,13 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.app.Activity;
-
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.commands.mecanumDrive.MecanumArcadeDriveCommand;
 import org.firstinspires.ftc.teamcode.util.TeamColor;
@@ -36,10 +32,6 @@ public class TeleOpRobotController extends RobotControllerBase {
     @Override
     public void initialize() {
         this.mecanumDriveSubsystem.setDefaultCommand(new MecanumArcadeDriveCommand(this.mecanumDriveSubsystem, this.driverController));
-
-        Activity activity = AppUtil.getInstance().getActivity();
-        if(activity == null);
-
     }
 
     @Override
