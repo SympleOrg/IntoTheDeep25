@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.subsystems.driveTrain.MecanumDriveSubsyste
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.commands.mecanumDrive.MecanumArcadeDriveCommand;
 import org.firstinspires.ftc.teamcode.subsystems.elevator.ElevatorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.extender.ExtenderSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.extender.ExternderConstants;
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.scorer.ScorerSubsystem;
 import org.firstinspires.ftc.teamcode.util.TeamColor;
@@ -56,8 +57,8 @@ public class TeleOpRobotController extends RobotControllerBase {
 
         this.actionController.getGamepadButton(GamepadKeys.Button.Y)
                 .toggleWhenPressed(
-                        this.extenderSubsystem.goToState(ExtenderSubsystem.ExtenderState.IDLE),
-                        this.extenderSubsystem.goToState(ExtenderSubsystem.ExtenderState.TAKE)
+                        this.extenderSubsystem.goToState(ExternderConstants.ExtenderState.CLOSE),
+                        this.extenderSubsystem.goToState(ExternderConstants.ExtenderState.OPEN)
                 );
 
         this.actionController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
