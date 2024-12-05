@@ -69,15 +69,6 @@ public class RobotPositionManager {
         instance = new RobotPositionManager(hardwareMap);
     }
 
-    public void update() {
-        MecanumDriveWheelSpeeds wheelSpeeds = new MecanumDriveWheelSpeeds(
-
-        );
-
-        this.odometry.update();
-
-    }
-
     public static RobotPositionManager getInstance() {
         return instance;
     }
@@ -110,19 +101,5 @@ public class RobotPositionManager {
 
     public double getBackWheelDistanceDriven() {
         return MathUtil.encoderTicksToMeter(this.backDeadWheel.getCurrentPosition());
-    }
-
-    public Pose2d getPose() {
-        return this.odometry.getPoseMeters();
-    }
-
-    public void setPose(Pose2d pose) {
-        this.odometry.updateWithTime()updatePose(pose);
-    }
-
-    public ChassisSpeeds getChassisSpeeds() {
-        return new ChassisSpeeds(
-                this.backDeadWheel.get() * DriveConstants.
-        )
     }
 }

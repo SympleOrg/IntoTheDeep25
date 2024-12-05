@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathfindLTV;
+import com.pathplanner.lib.util.ReplanningConfig;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -27,10 +29,17 @@ public class AutoRobotController extends RobotControllerBase {
     @Override
     public void initialize() {
         AutoBuilder.configureLTV(
-                () -> SymplePathplannerUtils.toPose2d(RobotPositionManager.getInstance().getPose()),
-                pose2d -> RobotPositionManager.getInstance().setPose(SymplePathplannerUtils.toPose2d(pose2d)),
-                this.mecanumDriveSubsystem.getc
+                () -> SymplePathplannerUtils.toPose2d(this.mecanumDriveSubsystem.getLocalizer().getPose()),
+                pose2d -> this.mecanumDriveSubsystem.getLocalizer().setPose(SymplePathplannerUtils.toPose2d(pose2d)),
+                () -> SymplePathplannerUtils.toChassisSpeeds(this.mecanumDriveSubsystem.getLocalizer().getChassisSpeeds()),
+                this.mecanumDriveSubsystem::moveFromWheelSpeed,
+                0.02f,
+                new ReplanningConfig(),
+                () -> false,
+//                this.mecanumDriveSubsystem
+                null
         );
+//        new PathfindLTV()
     }
 
     @Override

@@ -16,4 +16,11 @@ public class DriveConstants {
 
     public static final RevHubOrientationOnRobot.LogoFacingDirection LOGO_FACING_DIRECTION = RevHubOrientationOnRobot.LogoFacingDirection.UP;
     public static final RevHubOrientationOnRobot.UsbFacingDirection USB_FACING_DIRECTION = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
+
+    public static class DeedWheels {
+        public static final double WHEEL_RADIUS = 0.048;
+        public static final double TICKS_PER_REV = 2000;
+        public static final double WHEELS_DISTANCE = 0; // TODO: find the values
+        public static final double THIRD_WHEEL_OFFSET = 0; // TODO: find the values
+    }
 }

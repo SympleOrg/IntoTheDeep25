@@ -37,7 +37,6 @@ public abstract class SympleCommandOpMode extends CommandOpMode {
         while (!isStopRequested() && opModeIsActive()) {
             this.run();
             robotController.run();
-            RobotPositionManager.getInstance().update();
             SympleGraphDisplay.getInstance().run();
         }
 
