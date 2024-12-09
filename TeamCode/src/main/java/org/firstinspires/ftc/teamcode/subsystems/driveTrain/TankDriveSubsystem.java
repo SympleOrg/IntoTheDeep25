@@ -7,9 +7,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.managers.RobotPositionManager;
 import org.firstinspires.ftc.teamcode.util.DataLogger;
+import org.firstinspires.ftc.teamcode.util.LoggerSubsystem;
 
 // THIS CODE IS OUTDATED AND DIDN'T GET TESTED ON THE NEW ROBOT!
-public class TankDriveSubsystem extends SubsystemBase implements IDriveTrainSubsystem {
+public class TankDriveSubsystem extends SubsystemBase implements IDriveTrainSubsystem, LoggerSubsystem {
     private final MultipleTelemetry telemetry;
     private final DataLogger dataLogger;
 

@@ -4,6 +4,8 @@ import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.controller.PController;
 
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.MecanumDriveSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.driveTrain.MecanumDriveSubsystem.MecanumChassisWheelsSet.MotorNames;
+
 
 public class StrafeInAngleMecanumCommand extends CommandBase {
     private final double angle;
@@ -43,7 +45,7 @@ public class StrafeInAngleMecanumCommand extends CommandBase {
         double forwardDistanceMoved = this.subsystem.getForwardDistanceDriven() - this.STARTING_FORWARD_DIST;
         double sideDistanceMoved = this.subsystem.getSideDistanceDriven() - this.STARTING_SIDE_DIST;
 
-        double currentDist = Math.hypot(forwardDistanceMoved, sideDistanceMoved); // => √x*x + y*y
+        double currentDist = Math.hypot(forwardDistanceMoved, sideDistanceMoved); // => sqrt(x*x + y*y)
         double powerMultiplier = this.pController.calculate(currentDist);
 
         double rawFrontRightSpeed = (vSpeed + hSpeed) * powerMultiplier;
@@ -70,18 +72,18 @@ public class StrafeInAngleMecanumCommand extends CommandBase {
             normalizedBackLeftSpeed /= maxSpeed;
         }
 
-        this.subsystem.moveMotor(MecanumDriveSubsystem.MotorNames.FRONT_RIGHT, normalizedFrontRightSpeed);
-        this.subsystem.moveMotor(MecanumDriveSubsystem.MotorNames.BACK_RIGHT, normalizedBackRightSpeed);
-        this.subsystem.moveMotor(MecanumDriveSubsystem.MotorNames.FRONT_LEFT, normalizedFrontLeftSpeed);
-        this.subsystem.moveMotor(MecanumDriveSubsystem.MotorNames.BACK_LEFT, normalizedBackLeftSpeed);
+        this.subsystem.moveMotor(MotorNames.FRONT_RIGHT, normalizedFrontRightSpeed);
+        this.subsystem.moveMotor(MotorNames.BACK_RIGHT, normalizedBackRightSpeed);
+        this.subsystem.moveMotor(MotorNames.FRONT_LEFT, normalizedFrontLeftSpeed);
+        this.subsystem.moveMotor(MotorNames.BACK_LEFT, normalizedBackLeftSpeed);
     }
 
     @Override
     public void end(boolean interrupted) {
-        this.subsystem.moveMotor(MecanumDriveSubsystem.MotorNames.FRONT_RIGHT, 0);
-        this.subsystem.moveMotor(MecanumDriveSubsystem.MotorNames.BACK_RIGHT, 0);
-        this.subsystem.moveMotor(MecanumDriveSubsystem.MotorNames.FRONT_LEFT, 0);
-        this.subsystem.moveMotor(MecanumDriveSubsystem.MotorNames.BACK_LEFT, 0);
+        this.subsystem.moveMotor(MotorNames.FRONT_RIGHT, 0);
+        this.subsystem.moveMotor(MotorNames.BACK_RIGHT, 0);
+        this.subsystem.moveMotor(MotorNames.FRONT_LEFT, 0);
+        this.subsystem.moveMotor(MotorNames.BACK_LEFT, 0);
         super.end(interrupted);
     }
 

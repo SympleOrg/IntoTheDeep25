@@ -11,7 +11,19 @@ public class MathUtil {
         return ((deg * maxCounts) / 360.0f);
     }
 
-    public static double encoderTicksToMeter(double ticks) {
-        return ticks * DriveConstants.METERS_PER_TICK;
+    public static double encoderTicksToMeter(double ticks, double ticksPerRev, double radius) {
+        return ((Math.PI * 2 * radius) / ticksPerRev) * ticks;
+    }
+
+    /**
+     * Converts motor ticks per second to meters per second.
+     *
+     * @param ticksPerSecond The motor encoder ticks per second.
+     * @param radius The radius of the wheel in meters.
+     * @param ticksPerRev The number of encoder ticks per full revolution.
+     * @return The velocity in meters per second.
+     */
+    public static double encoderTPSToMPS(double ticksPerSecond, double radius, double ticksPerRev) {
+        return (2 * Math.PI * radius) * (ticksPerSecond / ticksPerRev);
     }
 }

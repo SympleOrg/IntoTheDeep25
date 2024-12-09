@@ -65,14 +65,14 @@ public class RobotPositionManager {
     }
 
     public double getLeftWheelDistanceDriven() {
-        return MathUtil.encoderTicksToMeter(this.leftDeadWheel.getCurrentPosition());
+        return MathUtil.encoderTicksToMeter(this.leftDeadWheel.getCurrentPosition(), DriveConstants.DeedWheels.TICKS_PER_REV, DriveConstants.DeedWheels.WHEEL_RADIUS);
     }
 
     public double getRightWheelDistanceDriven() {
-        return MathUtil.encoderTicksToMeter(this.rightDeadWheel.getCurrentPosition());
+        return MathUtil.encoderTicksToMeter(this.rightDeadWheel.getCurrentPosition(), DriveConstants.DeedWheels.TICKS_PER_REV, DriveConstants.DeedWheels.WHEEL_RADIUS);
     }
 
     public double getBackWheelDistanceDriven() {
-        return MathUtil.encoderTicksToMeter(this.backDeadWheel.getCurrentPosition());
+        return MathUtil.encoderTicksToMeter(this.backDeadWheel.getCurrentPosition(), DriveConstants.DeedWheels.TICKS_PER_REV, DriveConstants.DeedWheels.WHEEL_RADIUS);
     }
 }

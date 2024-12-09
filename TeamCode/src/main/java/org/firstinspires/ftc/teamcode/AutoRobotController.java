@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.MecanumDriveSubsystem;
+import org.firstinspires.ftc.teamcode.trajectories.Trajectories;
 import org.firstinspires.ftc.teamcode.util.opModes.SympleCommandOpMode;
 
 public class AutoRobotController extends RobotControllerBase {
@@ -23,7 +25,7 @@ public class AutoRobotController extends RobotControllerBase {
 
     @Override
     public void initialize() {
-
+        this.mecanumDriveSubsystem.setPose(new Pose2d()); // starting pose
     }
 
     @Override
@@ -33,7 +35,7 @@ public class AutoRobotController extends RobotControllerBase {
 
     @Override
     public void postInitialize() {
-
+        this.mecanumDriveSubsystem.followTrajectory(Trajectories.testTrajectory()).schedule();
     }
 
     @Override
