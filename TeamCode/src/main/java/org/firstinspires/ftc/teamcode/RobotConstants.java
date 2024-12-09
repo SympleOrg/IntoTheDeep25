@@ -50,12 +50,10 @@ public class RobotConstants {
         }
     }
 
-    public static class ExternderConstants {
+    public static class ExtenderConstants {
         public static final double Kp = 0;
         public static final double Ki = 0;
         public static final double Kd = 0;
-
-        public static final double TICKS_PER_REV = 2000;
 
         public enum ExtenderState {
             CLOSE(0),
@@ -78,7 +76,7 @@ public class RobotConstants {
         public enum ClawState {
             OPEN(0),
             CLOSE(0);
-            private double deg;
+            private final double deg;
 
             ClawState(double deg) {
                 this.deg = deg;

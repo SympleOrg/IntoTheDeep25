@@ -56,8 +56,8 @@ public class TeleOpRobotController extends RobotControllerBase {
 
         this.actionController.getGamepadButton(GamepadKeys.Button.Y)
                 .toggleWhenPressed(
-                        this.extenderSubsystem.goToState(RobotConstants.ExternderConstants.ExtenderState.CLOSE),
-                        this.extenderSubsystem.goToState(RobotConstants.ExternderConstants.ExtenderState.OPEN)
+                        this.extenderSubsystem.goToState(RobotConstants.ExtenderConstants.ExtenderState.CLOSE),
+                        this.extenderSubsystem.goToState(RobotConstants.ExtenderConstants.ExtenderState.OPEN)
                 );
 
         this.actionController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
@@ -68,6 +68,12 @@ public class TeleOpRobotController extends RobotControllerBase {
         this.actionController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(
                         this.intakeSubsystem.toggleState(RobotConstants.IntakeConstants.IntakeState.DROP)
+                );
+
+        this.actionController.getGamepadButton(GamepadKeys.Button.X)
+                .toggleWhenPressed(
+                        this.elevatorSubsystem.goToState(RobotConstants.ElevatorConstants.ElevatorState.BASKET_TOP),
+                        this.elevatorSubsystem.goToState(RobotConstants.ElevatorConstants.ElevatorState.REST)
                 );
     }
 

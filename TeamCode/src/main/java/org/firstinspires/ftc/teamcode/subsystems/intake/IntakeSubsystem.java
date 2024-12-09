@@ -33,6 +33,7 @@ public class IntakeSubsystem extends SubsystemBase implements LoggerSubsystem {
     }
 
     public Command setState(RobotConstants.IntakeConstants.IntakeState state) {
+        this.currentState = state;
         return new StartEndCommand(() -> this.set(state.getPower()), () -> this.set(0), this);
     }
 
