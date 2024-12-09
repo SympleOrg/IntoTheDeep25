@@ -31,7 +31,7 @@ public class ExtenderSubsystem extends SubsystemBase implements LoggerSubsystem,
         this.telemetry = telemetry;
         this.dataLogger = dataLogger;
 
-        this.motor = new MotorEx(hardwareMap, MotorMap.EXTENDER_MOTOR.getId());
+        this.motor = new MotorEx(hardwareMap, MotorMap.EXTENDER.getId());
         this.motor.resetEncoder();
     }
 
@@ -40,7 +40,7 @@ public class ExtenderSubsystem extends SubsystemBase implements LoggerSubsystem,
     }
 
     private double getCurrentPosition() {
-        return MathUtil.countsToDeg(this.motor.getCurrentPosition(), ExternderConstants.TICKS_PER_REV);
+        return MathUtil.countsToDeg(this.motor.getCurrentPosition(), MotorMap.EXTENDER.getTicksPerRev());
     }
 
     public Command goToState(ExternderConstants.ExtenderState state) {
