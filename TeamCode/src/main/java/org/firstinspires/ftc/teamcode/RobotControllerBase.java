@@ -38,8 +38,8 @@ public abstract class RobotControllerBase {
         // Reset the robot state
         this.dataLogger.addData(DataLogger.DataType.INFO, "RobotController: resetting robot");
         FtcDashboard.getInstance().stopCameraStream();
-        SympleGraphDisplay.getInstance().reset();
-        SympleGraphDisplay.getInstance().setSetting(DEFAULT_SYMPLE_GRAPH_DISPLAY_SETTINGS);
+//        SympleGraphDisplay.getInstance().reset();
+//        SympleGraphDisplay.getInstance().setSetting(DEFAULT_SYMPLE_GRAPH_DISPLAY_SETTINGS);
         CommandScheduler.getInstance().reset();
         RobotPositionManager.init(hardwareMap);
     }

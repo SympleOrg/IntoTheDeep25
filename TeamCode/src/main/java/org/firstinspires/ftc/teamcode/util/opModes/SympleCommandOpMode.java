@@ -26,7 +26,7 @@ public abstract class SympleCommandOpMode extends CommandOpMode {
         // runs when in init mode
         while (this.opModeInInit() && !this.isStopRequested()) {
             robotController.initializeLoop();
-            SympleGraphDisplay.getInstance().run();
+//            SympleGraphDisplay.getInstance().run();
         }
 
         this.waitForStart();
@@ -37,7 +37,7 @@ public abstract class SympleCommandOpMode extends CommandOpMode {
         while (!isStopRequested() && opModeIsActive()) {
             this.run();
             robotController.run();
-            SympleGraphDisplay.getInstance().run();
+//            SympleGraphDisplay.getInstance().run();
         }
 
         robotController.postRun();

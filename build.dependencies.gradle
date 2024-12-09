@@ -15,7 +15,7 @@ repositories {
     google() // Needed for androidx
     maven { url = 'https://maven.brott.dev/' }
     maven { url = "https://Symple25125:ghp_${new String("ozADyfsgVNxC2ujphTXAiEMPwQkUdR4LmPha")}@maven.pkg.github.com/SympleOrg/SympleGraphDisplay" }
-    maven { url = 'https://3015rangerrobotics.github.io/pathplannerlib/repo' }
+    maven { url = "https://ImBonana:ghp_${new String("NyGwZdbVRZe5HGSLA0t3A2hoZNsQox3Atgp1")}@maven.pkg.github.com/ImBonana/FtcPathplanner" }
     maven { url 'https://frcmaven.wpi.edu/release' }
 }
 
@@ -31,9 +31,11 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.acmerobotics.dashboard:dashboard:0.4.15'
 
-    implementation 'com.pathplanner.lib:PathplannerLib-java:2024.2.8'
-    implementation 'edu.wpi.first.wpimath:wpimath-java:2025.+'
-
     implementation 'top.symple:symplegraphdisplay:1.1.0'
+    implementation "top.symple:ftcpathplanner:0.1.0"
+    implementation 'edu.wpi.first.wpimath:wpimath-java:2025.+'
+    implementation 'edu.wpi.first.wpiutil:wpiutil-java:2025.+'
+    compileOnly 'edu.wpi.first.wpiunits:wpiunits-java:2025.+'
+    implementation 'edu.wpi.first.ntcore:ntcore-java:2025.+'
 }
 
