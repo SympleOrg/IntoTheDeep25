@@ -10,6 +10,7 @@ import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.RobotConstants;
 import org.firstinspires.ftc.teamcode.maps.MotorMap;
 import org.firstinspires.ftc.teamcode.util.DataLogger;
 import org.firstinspires.ftc.teamcode.util.LoggerSubsystem;
@@ -38,7 +39,7 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggerSubsystem 
     }
 
     private void setPower(double power) {
-        this.motors.set(power + ElevatorConstants.KG);
+        this.motors.set(power + RobotConstants.ElevatorConstants.KG);
     }
 
     /**
@@ -46,7 +47,7 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggerSubsystem 
      */
     private double getCurrentPosition() {
         double leaderMotorPosition = this.motors.getPositions().get(0);
-        return leaderMotorPosition * ElevatorConstants.METERS_PER_TICK;
+        return leaderMotorPosition * RobotConstants.ElevatorConstants.METERS_PER_TICK;
     }
 
 
@@ -64,7 +65,7 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggerSubsystem 
         return new RunCommand(() -> this.setPower(0), this);
     }
 
-    public Command goToState(ElevatorState state) {
+    public Command goToState(RobotConstants.ElevatorConstants.ElevatorState state) {
         PIDController pidController = new PIDController(0, 0, 0);
 
         return new FunctionalCommand(
@@ -84,24 +85,5 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggerSubsystem 
                 pidController::atSetPoint,
                 this
         );
-    }
-
-    public enum ElevatorState {
-        BASKET_TOP(0),
-        BASKET_BOTTOM(0),
-        HUMAN_PLAYER(0),
-        SCORE_TOP(0),
-        SCORE_BOTTOM(0),
-        REST(0);
-
-        private final double meters;
-
-        ElevatorState(double meters) {
-            this.meters = meters;
-        }
-
-        public double getMeters() {
-            return meters;
-        }
     }
 }

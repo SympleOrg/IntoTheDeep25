@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.subsystems.extender;
 
-import static org.firstinspires.ftc.teamcode.subsystems.extender.ExternderConstants.Kd;
-import static org.firstinspires.ftc.teamcode.subsystems.extender.ExternderConstants.Ki;
-import static org.firstinspires.ftc.teamcode.subsystems.extender.ExternderConstants.Kp;
+import static org.firstinspires.ftc.teamcode.RobotConstants.ExternderConstants.Kd;
+import static org.firstinspires.ftc.teamcode.RobotConstants.ExternderConstants.Ki;
+import static org.firstinspires.ftc.teamcode.RobotConstants.ExternderConstants.Kp;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.Command;
@@ -11,6 +11,8 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.teamcode.RobotConstants;
 import org.firstinspires.ftc.teamcode.maps.MotorMap;
 
 
@@ -43,7 +45,7 @@ public class ExtenderSubsystem extends SubsystemBase implements LoggerSubsystem,
         return MathUtil.countsToDeg(this.motor.getCurrentPosition(), MotorMap.EXTENDER.getTicksPerRev());
     }
 
-    public Command goToState(ExternderConstants.ExtenderState state) {
+    public Command goToState(RobotConstants.ExternderConstants.ExtenderState state) {
         PIDController pidController = new PIDController(Kp, Ki, Kd);
 
         return new FunctionalCommand(
@@ -74,5 +76,4 @@ public class ExtenderSubsystem extends SubsystemBase implements LoggerSubsystem,
     public MultipleTelemetry getTelemetry() {
         return telemetry;
     }
-
 }

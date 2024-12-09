@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.RobotConstants;
 import org.firstinspires.ftc.teamcode.maps.ServoMap;
 import org.firstinspires.ftc.teamcode.util.DataLogger;
 import org.firstinspires.ftc.teamcode.util.LoggerSubsystem;
@@ -25,7 +26,7 @@ public class ClawSubsystem extends SubsystemBase implements LoggerSubsystem {
         this.servo = new SympleServo(hardwareMap, ServoMap.CLAW.getId(), 0, 300);
     }
 
-    private void setState(ClawState state) {
+    private void setState(RobotConstants.ClawConstants.ClawState state) {
         this.servo.turnToAngle(state.getDeg());
     }
 
@@ -39,21 +40,7 @@ public class ClawSubsystem extends SubsystemBase implements LoggerSubsystem {
         return telemetry;
     }
 
-    public Command moveToState(ClawState state) {
+    public Command moveToState(RobotConstants.ClawConstants.ClawState state) {
         return new InstantCommand(() -> this.setState(state), this);
-    }
-
-    public enum ClawState {
-        OPEN(0),
-        CLOSE(0);
-        private double deg;
-
-        ClawState(double deg) {
-            this.deg = deg;
-        }
-
-        public double getDeg() {
-            return deg;
-        }
     }
 }

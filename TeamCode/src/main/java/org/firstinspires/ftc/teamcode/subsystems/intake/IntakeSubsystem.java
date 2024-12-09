@@ -8,6 +8,7 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.RobotConstants;
 import org.firstinspires.ftc.teamcode.maps.ServoMap;
 import org.firstinspires.ftc.teamcode.util.DataLogger;
 import org.firstinspires.ftc.teamcode.util.LoggerSubsystem;
@@ -17,7 +18,7 @@ public class IntakeSubsystem extends SubsystemBase implements LoggerSubsystem {
     private final MultipleTelemetry telemetry;
     private final DataLogger dataLogger;
 
-    private IntakeState currentState = IntakeState.IDLE;
+    private RobotConstants.IntakeConstants.IntakeState currentState = RobotConstants.IntakeConstants.IntakeState.IDLE;
 
     public IntakeSubsystem(HardwareMap hardwareMap, MultipleTelemetry telemetry, DataLogger dataLogger) {
         dataLogger.addData(DataLogger.DataType.INFO, "Initializing IntakeSubsystem.");
@@ -31,14 +32,14 @@ public class IntakeSubsystem extends SubsystemBase implements LoggerSubsystem {
         this.servo.setPower(power);
     }
 
-    public Command setState(IntakeState state) {
+    public Command setState(RobotConstants.IntakeConstants.IntakeState state) {
         return new StartEndCommand(() -> this.set(state.getPower()), () -> this.set(0), this);
     }
 
-    public Command toggleState(IntakeState state) {
+    public Command toggleState(RobotConstants.IntakeConstants.IntakeState state) {
         return new ConditionalCommand(
                 this.setState(state),
-                this.setState(IntakeState.IDLE),
+                this.setState(RobotConstants.IntakeConstants.IntakeState.IDLE),
                 () -> state != this.currentState
         );
     }
@@ -52,21 +53,5 @@ public class IntakeSubsystem extends SubsystemBase implements LoggerSubsystem {
     @Override
     public MultipleTelemetry getTelemetry() {
         return telemetry;
-    }
-
-    public enum IntakeState {
-        TAKE(1),
-        DROP(-1),
-        IDLE(0);
-
-        private final double power;
-
-        IntakeState(double power) {
-            this.power = power;
-        }
-
-        public double getPower() {
-            return power;
-        }
     }
 }

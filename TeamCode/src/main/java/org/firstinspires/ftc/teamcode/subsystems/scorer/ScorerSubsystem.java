@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.RobotConstants;
 import org.firstinspires.ftc.teamcode.maps.ServoMap;
 import org.firstinspires.ftc.teamcode.util.DataLogger;
 import org.firstinspires.ftc.teamcode.util.LoggerSubsystem;
@@ -24,7 +25,7 @@ public class ScorerSubsystem extends SubsystemBase implements LoggerSubsystem {
         this.dataLogger = dataLogger;
     }
 
-    private void setState(ScorerState state) {
+    private void setState(RobotConstants.ScorerConstants.ScorerState state) {
         this.servo.turnToAngle(state.getDeg());
     }
 
@@ -38,22 +39,7 @@ public class ScorerSubsystem extends SubsystemBase implements LoggerSubsystem {
         return telemetry;
     }
 
-    public Command moveToState(ScorerState state) {
+    public Command moveToState(RobotConstants.ScorerConstants.ScorerState state) {
         return new InstantCommand(() -> this.setState(state), this);
-    }
-
-    public enum ScorerState {
-        SCORE(0),
-        TAKE(0);
-
-        private final double deg;
-
-        ScorerState(double deg) {
-            this.deg = deg;
-        }
-
-        public double getDeg() {
-            return deg;
-        }
     }
 }
