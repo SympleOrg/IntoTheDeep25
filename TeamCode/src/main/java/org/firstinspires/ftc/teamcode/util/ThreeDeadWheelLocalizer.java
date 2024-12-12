@@ -75,7 +75,7 @@ public class ThreeDeadWheelLocalizer {
         double fieldDeltaX = deltaX * cosHeading - deltaY * sinHeading;
         double fieldDeltaY = deltaX * sinHeading + deltaY * cosHeading;
 
-        this.pose.plus(new Transform2d(
+        this.pose = this.pose.plus(new Transform2d(
                 new Translation2d(fieldDeltaX, fieldDeltaY),
                 new Rotation2d(deltaHeading)
         ));

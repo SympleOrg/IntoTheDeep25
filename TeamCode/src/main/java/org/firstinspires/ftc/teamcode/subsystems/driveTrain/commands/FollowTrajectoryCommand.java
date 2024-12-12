@@ -15,7 +15,7 @@ public class FollowTrajectoryCommand extends RamseteCommand {
         super(
                 trajectory,
                 subsystem::getPosition,
-                new RamseteController(0.5, 0.5),
+                new RamseteController(2.0, 0.8),
                 new SimpleMotorFeedforward(
                         DriveConstants.RamsetController.Feedforward.Ks,
                         DriveConstants.RamsetController.Feedforward.Kv,

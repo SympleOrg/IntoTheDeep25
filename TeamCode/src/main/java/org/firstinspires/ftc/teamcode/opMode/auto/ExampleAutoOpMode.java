@@ -7,7 +7,6 @@ import org.firstinspires.ftc.teamcode.AutoRobotController;
 import org.firstinspires.ftc.teamcode.util.opModes.SympleCommandOpMode;
 
 @Autonomous(name = "Example auto", group = "auto")
-@Disabled
 public class ExampleAutoOpMode extends SympleCommandOpMode {
     @Override
     public void initialize() {

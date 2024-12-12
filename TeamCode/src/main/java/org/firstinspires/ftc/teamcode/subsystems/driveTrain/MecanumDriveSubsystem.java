@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems.driveTrain;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.Command;
+import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
@@ -54,6 +55,7 @@ public class MecanumDriveSubsystem extends SubsystemBase implements IDriveTrainS
             DriveConstants.DeedWheels.WHEELS_DISTANCE,
             DriveConstants.DeedWheels.THIRD_WHEEL_OFFSET
         );
+        this.getDataLogger().addData(DataLogger.DataType.INFO, this.getClass().getSimpleName() + ": Localizer Created");
     }
 
     @Override
@@ -63,6 +65,13 @@ public class MecanumDriveSubsystem extends SubsystemBase implements IDriveTrainS
         this.getTelemetry().addData("Pos X", pose2d.getX());
         this.getTelemetry().addData("Pos Y", pose2d.getY());
         this.getTelemetry().addData("Pos Heading", pose2d.getRotation().getDegrees());
+
+        MecanumDriveWheelSpeeds mecanumDriveWheelSpeeds = this.wheelsSet.getWheelSpeeds();
+        this.getTelemetry().addData("fl", mecanumDriveWheelSpeeds.frontLeftMetersPerSecond);
+        this.getTelemetry().addData("fr", mecanumDriveWheelSpeeds.frontRightMetersPerSecond);
+        this.getTelemetry().addData("bl", mecanumDriveWheelSpeeds.rearLeftMetersPerSecond);
+        this.getTelemetry().addData("br", mecanumDriveWheelSpeeds.rearRightMetersPerSecond);
+
     }
 
     public void moveMotor(MecanumChassisWheelsSet.MotorNames motor, double power) {
