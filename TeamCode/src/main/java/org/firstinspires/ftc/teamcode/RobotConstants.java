@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 
 import org.firstinspires.ftc.teamcode.maps.MotorMap;
@@ -21,11 +22,20 @@ public class RobotConstants {
         public static final RevHubOrientationOnRobot.UsbFacingDirection USB_FACING_DIRECTION = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
     }
 
+    @Config
     public static class ElevatorConstants {
-        public static final double KG = 0;
+        public static double KG = 0.1;
+
+        public static double P = 15;
+        public static double I = 0;
+        public static double D = 0;
+
+        public static double MAX_HEIGHT = 0.94;
+        public static double MIN_HEIGHT = -0.05;
 
         public static final double GEAR_RATIO = 1;
-        public static final double WHEEL_RADIUS = 0;
+        public static final double WHEEL_RADIUS = 0.0382 * 0.5; // cry about it
+
 
         public static final double METERS_PER_REV = (Math.PI * 2) * WHEEL_RADIUS;
         public static final double METERS_PER_TICK = (METERS_PER_REV / (MotorMap.ELEVATOR_LEFT.getTicksPerRev() * GEAR_RATIO));
@@ -34,7 +44,7 @@ public class RobotConstants {
             BASKET_TOP(0),
             BASKET_BOTTOM(0),
             HUMAN_PLAYER(0),
-            SCORE_TOP(0),
+            SCORE_TOP(0.45),
             SCORE_BOTTOM(0),
             REST(0);
 
@@ -74,8 +84,8 @@ public class RobotConstants {
     public static class ClawConstants {
 
         public enum ClawState {
-            OPEN(0),
-            CLOSE(0);
+            OPEN(30),
+            CLOSE(180);
             private final double deg;
 
             ClawState(double deg) {

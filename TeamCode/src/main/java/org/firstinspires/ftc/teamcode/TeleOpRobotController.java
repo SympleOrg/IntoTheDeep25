@@ -42,38 +42,49 @@ public class TeleOpRobotController extends RobotControllerBase {
 
     @Override
     public void createKeyBindings() {
-        this.actionController.getGamepadButton(GamepadKeys.Button.A)
+//        this.actionController.getGamepadButton(GamepadKeys.Button.A)
+//                .toggleWhenPressed(
+//                        this.clawSubsystem.moveToState(RobotConstants.ClawConstants.ClawState.CLOSE),
+//                        this.clawSubsystem.moveToState(RobotConstants.ClawConstants.ClawState.OPEN)
+//                );
+//
+//        this.actionController.getGamepadButton(GamepadKeys.Button.B)
+//                .toggleWhenPressed(
+//                        this.scorerSubsystem.moveToState(RobotConstants.ScorerConstants.ScorerState.TAKE),
+//                        this.scorerSubsystem.moveToState(RobotConstants.ScorerConstants.ScorerState.SCORE)
+//                );
+//
+//        this.actionController.getGamepadButton(GamepadKeys.Button.Y)
+//                .toggleWhenPressed(
+//                        this.extenderSubsystem.goToState(RobotConstants.ExtenderConstants.ExtenderState.CLOSE),
+//                        this.extenderSubsystem.goToState(RobotConstants.ExtenderConstants.ExtenderState.OPEN)
+//                );
+//
+//        this.actionController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+//                .whenPressed(
+//                        this.intakeSubsystem.toggleState(RobotConstants.IntakeConstants.IntakeState.TAKE)
+//                );
+//
+//        this.actionController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+//                .whenPressed(
+//                        this.intakeSubsystem.toggleState(RobotConstants.IntakeConstants.IntakeState.DROP)
+//                );
+
+        this.actionController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .toggleWhenPressed(
-                        this.clawSubsystem.moveToState(RobotConstants.ClawConstants.ClawState.CLOSE),
-                        this.clawSubsystem.moveToState(RobotConstants.ClawConstants.ClawState.OPEN)
+                        this.elevatorSubsystem.goToState(RobotConstants.ElevatorConstants.ElevatorState.SCORE_TOP),
+                        this.elevatorSubsystem.goToState(RobotConstants.ElevatorConstants.ElevatorState.REST)
+                );
+
+        this.actionController.getGamepadButton(GamepadKeys.Button.A)
+                .whenPressed(
+                        this.elevatorSubsystem.scoreOnChamber(RobotConstants.ElevatorConstants.ElevatorState.SCORE_TOP)
                 );
 
         this.actionController.getGamepadButton(GamepadKeys.Button.B)
                 .toggleWhenPressed(
-                        this.scorerSubsystem.moveToState(RobotConstants.ScorerConstants.ScorerState.TAKE),
-                        this.scorerSubsystem.moveToState(RobotConstants.ScorerConstants.ScorerState.SCORE)
-                );
-
-        this.actionController.getGamepadButton(GamepadKeys.Button.Y)
-                .toggleWhenPressed(
-                        this.extenderSubsystem.goToState(RobotConstants.ExtenderConstants.ExtenderState.CLOSE),
-                        this.extenderSubsystem.goToState(RobotConstants.ExtenderConstants.ExtenderState.OPEN)
-                );
-
-        this.actionController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenPressed(
-                        this.intakeSubsystem.toggleState(RobotConstants.IntakeConstants.IntakeState.TAKE)
-                );
-
-        this.actionController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whenPressed(
-                        this.intakeSubsystem.toggleState(RobotConstants.IntakeConstants.IntakeState.DROP)
-                );
-
-        this.actionController.getGamepadButton(GamepadKeys.Button.X)
-                .toggleWhenPressed(
-                        this.elevatorSubsystem.goToState(RobotConstants.ElevatorConstants.ElevatorState.BASKET_TOP),
-                        this.elevatorSubsystem.goToState(RobotConstants.ElevatorConstants.ElevatorState.REST)
+                        this.clawSubsystem.moveToState(RobotConstants.ClawConstants.ClawState.CLOSE),
+                        this.clawSubsystem.moveToState(RobotConstants.ClawConstants.ClawState.OPEN)
                 );
     }
 

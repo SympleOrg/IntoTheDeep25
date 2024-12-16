@@ -3,14 +3,17 @@ package org.firstinspires.ftc.teamcode.subsystems.elevator;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.FunctionalCommand;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.RunCommand;
+import com.arcrobotics.ftclib.command.StartEndCommand;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.RobotConstants;
+import org.firstinspires.ftc.teamcode.RobotConstants.ElevatorConstants;
 import org.firstinspires.ftc.teamcode.maps.MotorMap;
 import org.firstinspires.ftc.teamcode.util.DataLogger;
 import org.firstinspires.ftc.teamcode.util.LoggerSubsystem;
@@ -29,17 +32,29 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggerSubsystem 
         MotorEx rightMotor = new MotorEx(hardwareMap, MotorMap.ELEVATOR_RIGHT.getId());
         MotorEx leftMotor = new MotorEx(hardwareMap, MotorMap.ELEVATOR_LEFT.getId());
 
-        rightMotor.setInverted(true);
-
         this.motors = new MotorGroup(leftMotor, rightMotor);
+        this.motors.setInverted(true);
 
         this.motors.resetEncoder();
 
         this.setDefaultCommand(this.holdElevator());
     }
 
+    @Override
+    public void periodic() {
+        this.getTelemetry().addData("elev pos", this.getCurrentPosition());
+        this.getTelemetry().addData("elev cmd", this.getCurrentCommand() != null ? this.getCurrentCommand().getName() : "None");
+    }
+
     private void setPower(double power) {
-        this.motors.set(power + RobotConstants.ElevatorConstants.KG);
+        double finalPower = 0;
+        double pos = this.getCurrentPosition();
+
+        if(ElevatorConstants.MIN_HEIGHT < pos && pos < ElevatorConstants.MAX_HEIGHT) {
+            finalPower = power;
+        }
+
+        this.motors.set(finalPower + ElevatorConstants.KG);
     }
 
     /**
@@ -47,7 +62,7 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggerSubsystem 
      */
     private double getCurrentPosition() {
         double leaderMotorPosition = this.motors.getPositions().get(0);
-        return leaderMotorPosition * RobotConstants.ElevatorConstants.METERS_PER_TICK;
+        return leaderMotorPosition * ElevatorConstants.METERS_PER_TICK;
     }
 
 
@@ -62,18 +77,23 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggerSubsystem 
     }
 
     public Command holdElevator() {
+//        return new StartEndCommand(
+//                () -> this.motors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE),
+//                () -> this.motors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.FLOAT),
+//                this
+//        );
         return new RunCommand(() -> this.setPower(0), this);
     }
 
-    public Command goToState(RobotConstants.ElevatorConstants.ElevatorState state) {
-        PIDController pidController = new PIDController(0, 0, 0);
+    private Command goToPosition(double meters) {
+        PIDController pidController = new PIDController(ElevatorConstants.P, ElevatorConstants.I, ElevatorConstants.D);
 
         return new FunctionalCommand(
                 // init
                 () -> {
                     pidController.reset();
-                    pidController.setTolerance(0.03);
-                    pidController.setSetPoint(state.getMeters());
+                    pidController.setTolerance(0.01);
+                    pidController.setSetPoint(meters);
                 },
                 // execute
                 () -> {
@@ -81,9 +101,19 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggerSubsystem 
                     this.setPower(power);
                 },
                 // end
-                (interrupted) -> {},
+                (interrupted) -> {
+
+                },
                 pidController::atSetPoint,
                 this
         );
+    }
+
+    public Command goToState(ElevatorConstants.ElevatorState state) {
+        return goToPosition(state.getMeters());
+    }
+
+    public Command scoreOnChamber(ElevatorConstants.ElevatorState state) {
+        return goToPosition(state.getMeters() - 0.1);
     }
 }
