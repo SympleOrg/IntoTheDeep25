@@ -8,9 +8,14 @@ import org.firstinspires.ftc.teamcode.subsystems.driveTrain.MecanumDriveSubsyste
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.commands.mecanumDrive.MecanumArcadeDriveCommand;
 import org.firstinspires.ftc.teamcode.util.TeamColor;
 import org.firstinspires.ftc.teamcode.util.opModes.SympleCommandOpMode;
+import org.firstinspires.ftc.teamcode.vision.VisionConstants;
+import org.firstinspires.ftc.teamcode.vision.VisionManger;
+import org.firstinspires.ftc.teamcode.vision.VisionPipeline;
 
 public class TeleOpRobotController extends RobotControllerBase {
+    private final TeamColor teamColor;
     private final MecanumDriveSubsystem mecanumDriveSubsystem;
+    private final VisionManger visionManger;
 
     private TeleOpRobotController(HardwareMap hMap, Telemetry telemetry, Gamepad driverController, Gamepad actionController, TeamColor teamColor, String logFilePrefix, boolean logData) {
         super(hMap, telemetry, driverController, actionController, logFilePrefix, logData);
@@ -21,7 +26,10 @@ public class TeleOpRobotController extends RobotControllerBase {
             throw exception;
         }
 
+        this.teamColor = teamColor;
+
         this.mecanumDriveSubsystem = new MecanumDriveSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
+        this.visionManger = new VisionManger(this.getHardwareMap(), this.getDataLogger());
     }
 
     @Override
@@ -32,6 +40,7 @@ public class TeleOpRobotController extends RobotControllerBase {
     @Override
     public void initialize() {
         this.mecanumDriveSubsystem.setDefaultCommand(new MecanumArcadeDriveCommand(this.mecanumDriveSubsystem, this.driverController));
+        this.visionManger.setPipeline(new VisionPipeline(VisionConstants.GamePieceColor.fromTeamColor(this.teamColor)));
     }
 
     @Override
