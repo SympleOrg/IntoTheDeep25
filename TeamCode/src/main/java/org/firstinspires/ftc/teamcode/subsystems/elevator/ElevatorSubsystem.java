@@ -3,18 +3,17 @@ package org.firstinspires.ftc.teamcode.subsystems.elevator;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.FunctionalCommand;
-import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.RunCommand;
-import com.arcrobotics.ftclib.command.StartEndCommand;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
-import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.teamcode.RobotConstants.ElevatorConstants;
 import org.firstinspires.ftc.teamcode.maps.MotorMap;
+import org.firstinspires.ftc.teamcode.maps.SensorMap;
 import org.firstinspires.ftc.teamcode.util.DataLogger;
 import org.firstinspires.ftc.teamcode.util.LoggerSubsystem;
 
@@ -22,6 +21,8 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggerSubsystem 
     private final MotorGroup motors;
     private final MultipleTelemetry telemetry;
     private final DataLogger dataLogger;
+
+    private final TouchSensor touchSensor;
 
     public ElevatorSubsystem(HardwareMap hardwareMap, MultipleTelemetry telemetry, DataLogger dataLogger) {
         dataLogger.addData(DataLogger.DataType.INFO, "Initializing ElevatorSubsystem.");
@@ -37,6 +38,8 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggerSubsystem 
 
         this.motors.resetEncoder();
 
+        this.touchSensor = hardwareMap.get(TouchSensor.class, SensorMap.ELEVATOR_RESET.getId());
+
         this.setDefaultCommand(this.holdElevator());
     }
 
@@ -44,6 +47,8 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggerSubsystem 
     public void periodic() {
         this.getTelemetry().addData("elev pos", this.getCurrentPosition());
         this.getTelemetry().addData("elev cmd", this.getCurrentCommand() != null ? this.getCurrentCommand().getName() : "None");
+
+        if (this.touchSensor.isPressed()) this.motors.resetEncoder();
     }
 
     private void setPower(double power) {
@@ -77,11 +82,6 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggerSubsystem 
     }
 
     public Command holdElevator() {
-//        return new StartEndCommand(
-//                () -> this.motors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE),
-//                () -> this.motors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.FLOAT),
-//                this
-//        );
         return new RunCommand(() -> this.setPower(0), this);
     }
 

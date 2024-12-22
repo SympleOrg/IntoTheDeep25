@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.subsystems.driveTrain.commands.mecanumDri
 
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.geometry.Vector2d;
+import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveWheelSpeeds;
 
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.MecanumDriveSubsystem;
 
@@ -20,37 +22,31 @@ public class MecanumArcadeDriveCommand extends CommandBase {
     @Override
     public void execute() {
         double vSpeed = this.gamepad.getLeftY();
-        double hSpeed = this.gamepad.getLeftX();
-        double rotationSpeed = this.gamepad.getRightX();
+        double hSpeed = -this.gamepad.getLeftX();
+        double rotationSpeed = -this.gamepad.getRightX();
 
-        double rawFrontRightSpeed = vSpeed + rotationSpeed + hSpeed;
-        double rawBackRightSpeed = vSpeed + rotationSpeed - hSpeed;
-        double rawFrontLeftSpeed = vSpeed - rotationSpeed - hSpeed;
-        double rawBackLeftSpeed = vSpeed - rotationSpeed + hSpeed;
+        Vector2d vector = new Vector2d(hSpeed, vSpeed);
+        vector = vector.rotateBy(this.subsystem.getHeading());
 
-        double normalizedFrontRightSpeed = rawFrontRightSpeed;
-        double normalizedBackRightSpeed = rawBackRightSpeed;
-        double normalizedFrontLeftSpeed = rawFrontLeftSpeed;
-        double normalizedBackLeftSpeed = rawBackLeftSpeed;
+        double[] speeds = new double[4];
+        speeds[0] = Math.sin(vector.angle() + Math.PI / 4) + rotationSpeed; // front left
+        speeds[1] = Math.sin(vector.angle() - Math.PI / 4) - rotationSpeed; // front right
+        speeds[2] = Math.sin(vector.angle() - Math.PI / 4) + rotationSpeed; // back left
+        speeds[3] = Math.sin(vector.angle() + Math.PI / 4) - rotationSpeed; // back right
 
-        double absFrontRightSpeed = Math.abs(rawFrontRightSpeed);
-        double absBackRightSpeed = Math.abs(rawBackRightSpeed);
-        double absFrontLeftSpeed = Math.abs(rawFrontLeftSpeed);
-        double absBackLeftSpeed = Math.abs(rawBackLeftSpeed);
+        normalize(speeds, vector.magnitude());
 
-        double maxSpeed = Math.max(absFrontRightSpeed, Math.max(absBackRightSpeed, Math.max(absFrontLeftSpeed, absBackLeftSpeed)));
+        speeds[0] += rotationSpeed;
+        speeds[1] -= rotationSpeed;
+        speeds[2] += rotationSpeed;
+        speeds[3] -= rotationSpeed;
 
-        if(maxSpeed > 1) {
-            normalizedFrontRightSpeed /= maxSpeed;
-            normalizedBackRightSpeed /= maxSpeed;
-            normalizedFrontLeftSpeed /= maxSpeed;
-            normalizedBackLeftSpeed /= maxSpeed;
-        }
+        normalize(speeds);
 
-        this.subsystem.moveMotor(MecanumDriveSubsystem.MotorNames.FRONT_RIGHT, normalizedFrontRightSpeed);
-        this.subsystem.moveMotor(MecanumDriveSubsystem.MotorNames.BACK_RIGHT, normalizedBackRightSpeed);
-        this.subsystem.moveMotor(MecanumDriveSubsystem.MotorNames.FRONT_LEFT, normalizedFrontLeftSpeed);
-        this.subsystem.moveMotor(MecanumDriveSubsystem.MotorNames.BACK_LEFT, normalizedBackLeftSpeed);
+        this.subsystem.moveMotor(MecanumDriveSubsystem.MotorNames.FRONT_LEFT, speeds[0]);
+        this.subsystem.moveMotor(MecanumDriveSubsystem.MotorNames.FRONT_RIGHT, speeds[1]);
+        this.subsystem.moveMotor(MecanumDriveSubsystem.MotorNames.BACK_LEFT, speeds[2]);
+        this.subsystem.moveMotor(MecanumDriveSubsystem.MotorNames.BACK_RIGHT, speeds[3]);
     }
 
     @Override
@@ -60,5 +56,31 @@ public class MecanumArcadeDriveCommand extends CommandBase {
         this.subsystem.moveMotor(MecanumDriveSubsystem.MotorNames.FRONT_LEFT, 0);
         this.subsystem.moveMotor(MecanumDriveSubsystem.MotorNames.BACK_LEFT, 0);
         super.end(interrupted);
+    }
+
+    private void normalize(double[] wheelSpeeds, double mag) {
+        double maxSpeed = this.getMaxSpeeds(wheelSpeeds);
+
+        for (int i = 0; i < wheelSpeeds.length; i++) {
+            wheelSpeeds[i] = (wheelSpeeds[i] / maxSpeed) * mag;
+        }
+    }
+
+    private void normalize(double[] wheelSpeeds) {
+        double maxSpeed = this.getMaxSpeeds(wheelSpeeds);
+
+        if(maxSpeed > 1) {
+            for (int i = 0; i < wheelSpeeds.length; i++) {
+                wheelSpeeds[i] /= maxSpeed;
+            }
+        }
+    }
+
+    private double getMaxSpeeds(double[] wheelSpeeds) {
+        double maxSpeed = 0;
+        for(double speed : wheelSpeeds) {
+            maxSpeed = Math.max(maxSpeed, Math.abs(speed));
+        }
+        return maxSpeed;
     }
 }
