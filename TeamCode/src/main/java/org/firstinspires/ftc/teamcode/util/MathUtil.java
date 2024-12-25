@@ -26,4 +26,12 @@ public class MathUtil {
     public static double encoderTPSToMPS(double ticksPerSecond, double radius, double ticksPerRev) {
         return (2 * Math.PI * radius) * (ticksPerSecond / ticksPerRev);
     }
+
+    public static double meterToInch(double meter) {
+        return meter * 39.3700787;
+    }
+
+    public static double inchToMeter(double inch) {
+        return inch * 0.0254;
+    }
 }

@@ -1,10 +1,17 @@
 package org.firstinspires.ftc.teamcode.subsystems.driveTrain;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.geometry.Pose2d;
+import com.arcrobotics.ftclib.geometry.Rotation2d;
+import com.arcrobotics.ftclib.geometry.Transform2d;
+import com.arcrobotics.ftclib.geometry.Translation2d;
+import com.arcrobotics.ftclib.geometry.Vector2d;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.DifferentialDriveWheelSpeeds;
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveWheelSpeeds;
@@ -60,7 +67,7 @@ public class MecanumDriveSubsystem extends SubsystemBase implements IDriveTrainS
 
     @Override
     public void periodic() {
-        this.localizer.update();
+        this.localizer.updatePose();
         Pose2d pose2d = this.localizer.getPose();
         this.getTelemetry().addData("Pos X", pose2d.getX());
         this.getTelemetry().addData("Pos Y", pose2d.getY());
@@ -72,6 +79,23 @@ public class MecanumDriveSubsystem extends SubsystemBase implements IDriveTrainS
         this.getTelemetry().addData("bl", mecanumDriveWheelSpeeds.rearLeftMetersPerSecond);
         this.getTelemetry().addData("br", mecanumDriveWheelSpeeds.rearRightMetersPerSecond);
 
+//        Rotation2d halfv = pose2d.getRotation().times(9 / 2f);
+//        Pose2d pos1 = pose2d.plus(new Transform2d(new Translation2d(), halfv));
+//        Pose2d pos2 = pos1.plus(new Transform2d(new Translation2d(), halfv));
+
+        TelemetryPacket packet = new TelemetryPacket(true);
+        Pose2d drawPose = new Pose2d(
+                MathUtil.meterToInch(pose2d.getX()),
+                MathUtil.meterToInch(pose2d.getY()),
+                pose2d.getRotation()
+        );
+        double radius = MathUtil.meterToInch(DriveConstants.ROBOT_RADIUS);
+        packet.fieldOverlay()
+                .setStrokeWidth(1)
+                .strokeCircle(drawPose.getX(), drawPose.getY(), radius)
+                .strokeLine(drawPose.getX(), drawPose.getY(), drawPose.getX() + drawPose.getRotation().getCos() * radius,  drawPose.getY() + drawPose.getRotation().getSin() * radius);
+
+        FtcDashboard.getInstance().sendTelemetryPacket(packet);
     }
 
     public void moveMotor(MecanumChassisWheelsSet.MotorNames motor, double power) {
@@ -97,7 +121,7 @@ public class MecanumDriveSubsystem extends SubsystemBase implements IDriveTrainS
     }
 
     public void setPose(Pose2d pose) {
-        this.localizer.setPose(pose);
+//        this.localizer.setPose(pose);
     }
 
     @Override
