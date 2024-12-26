@@ -47,6 +47,7 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggerSubsystem 
     public void periodic() {
         this.getTelemetry().addData("elev pos", this.getCurrentPosition());
         this.getTelemetry().addData("elev cmd", this.getCurrentCommand() != null ? this.getCurrentCommand().getName() : "None");
+        this.getTelemetry().addData("elev on ground", this.touchSensor.isPressed());
 
         if (this.touchSensor.isPressed()) this.motors.resetEncoder();
     }

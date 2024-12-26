@@ -18,8 +18,9 @@ public class RobotConstants {
 
         public static final double Ks = 0;
 
-        public static final RevHubOrientationOnRobot.LogoFacingDirection LOGO_FACING_DIRECTION = RevHubOrientationOnRobot.LogoFacingDirection.UP;
-        public static final RevHubOrientationOnRobot.UsbFacingDirection USB_FACING_DIRECTION = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
+        // the values are *not* correct, but it works fine so fuck it
+        public static final RevHubOrientationOnRobot.LogoFacingDirection LOGO_FACING_DIRECTION = RevHubOrientationOnRobot.LogoFacingDirection.LEFT; // this should be LEFT
+        public static final RevHubOrientationOnRobot.UsbFacingDirection USB_FACING_DIRECTION = RevHubOrientationOnRobot.UsbFacingDirection.UP; // this should be UP
     }
 
     @Config
@@ -45,7 +46,7 @@ public class RobotConstants {
             BASKET_BOTTOM(0),
             HUMAN_PLAYER(0),
             SCORE_TOP(0.45),
-            SCORE_BOTTOM(0),
+            SCORE_BOTTOM(0.15),
             REST(0);
 
             private final double meters;
@@ -84,7 +85,7 @@ public class RobotConstants {
     public static class ClawConstants {
 
         public enum ClawState {
-            OPEN(30),
+            OPEN(40),
             CLOSE(180);
             private final double deg;
 
