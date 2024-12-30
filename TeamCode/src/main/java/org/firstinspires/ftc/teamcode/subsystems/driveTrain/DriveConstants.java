@@ -29,10 +29,11 @@ public class DriveConstants {
     }
 
     public static class RamsetController {
+        @Config
         public static class Feedforward {
-            public static final double Ks = 0.093;
-            public static final double Kv = Math.pow(10, -6) + 0.01;
-            public static final double Ka = Math.pow(10, -6) + 0.01;
+            public static double Ks = 0.1;
+            public static double Kv = 0.175;
+            public static double Ka = 0.001;
         }
 
         @Config

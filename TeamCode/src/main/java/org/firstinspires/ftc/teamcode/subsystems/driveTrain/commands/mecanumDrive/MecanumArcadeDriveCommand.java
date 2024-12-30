@@ -20,7 +20,7 @@ public class MecanumArcadeDriveCommand extends CommandBase {
 
     @Override
     public void execute() {
-        double vSpeed = this.gamepad.getLeftY();
+        double vSpeed = -this.gamepad.getLeftY();
         double hSpeed = this.gamepad.getLeftX();
         double rotationSpeed = this.gamepad.getRightX();
 

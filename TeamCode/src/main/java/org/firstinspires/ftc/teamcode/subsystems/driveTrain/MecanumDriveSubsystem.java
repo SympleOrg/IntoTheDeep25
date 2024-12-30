@@ -56,7 +56,7 @@ public class MecanumDriveSubsystem extends SubsystemBase implements IDriveTrainS
             this.wheelsSet.getMotor(MecanumChassisWheelsSet.MotorNames.FRONT_LEFT),
             this.wheelsSet.getMotor(MecanumChassisWheelsSet.MotorNames.FRONT_RIGHT),
             this.wheelsSet.getMotor(MecanumChassisWheelsSet.MotorNames.BACK_LEFT),
-            new Pose2d(),
+            new Pose2d(new Translation2d(0, 0), Rotation2d.fromDegrees(0)),
             DriveConstants.DeedWheels.WHEEL_RADIUS,
             DriveConstants.DeedWheels.TICKS_PER_REV,
             DriveConstants.DeedWheels.WHEELS_DISTANCE,

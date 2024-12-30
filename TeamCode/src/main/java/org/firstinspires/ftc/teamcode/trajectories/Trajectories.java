@@ -15,8 +15,8 @@ public class Trajectories {
     public static Trajectory testTrajectory() {
         List<Pose2d> waypoints = new ArrayList<>();
         waypoints.add(new Pose2d(0, 0, Rotation2d.fromDegrees(0)));
-        waypoints.add(new Pose2d(0, 0.5, Rotation2d.fromDegrees(45)));
-        waypoints.add(new Pose2d(0, 1, Rotation2d.fromDegrees(90)));
+        waypoints.add(new Pose2d(0, 0.2, Rotation2d.fromDegrees(45)));
+        waypoints.add(new Pose2d(0, 0, Rotation2d.fromDegrees(0)));
 //        waypoints.add(new Pose2d(2.38, 0, Rotation2d.fromDegrees(-90)));
 //        waypoints.add(new Pose2d(2.38, 2.38, Rotation2d.fromDegrees(-180)));
 //        waypoints.add(new Pose2d(0, 2.38, Rotation2d.fromDegrees(-270)));
