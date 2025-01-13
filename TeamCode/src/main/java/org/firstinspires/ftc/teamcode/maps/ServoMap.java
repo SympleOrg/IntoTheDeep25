@@ -10,7 +10,10 @@ package org.firstinspires.ftc.teamcode.maps;
  * </pre>
  **/
 public enum ServoMap {
-    ;
+    CLAW("claw"),
+    SCORER("scorer"),
+    INTAKE("intake"),
+    EXTENDER("extender");
     private final String id;
 
     ServoMap(String id) {
