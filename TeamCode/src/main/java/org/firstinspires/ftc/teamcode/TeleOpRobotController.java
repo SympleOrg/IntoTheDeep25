@@ -1,5 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.arcrobotics.ftclib.command.Command;
+import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.ParallelCommandGroup;
+import com.arcrobotics.ftclib.command.SelectCommand;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
+import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -11,9 +18,12 @@ import org.firstinspires.ftc.teamcode.subsystems.driveTrain.commands.mecanumDriv
 import org.firstinspires.ftc.teamcode.subsystems.elevator.ElevatorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.extender.ExtenderSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.intakejoint.IntakeJointSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.scorer.ScorerSubsystem;
 import org.firstinspires.ftc.teamcode.util.TeamColor;
 import org.firstinspires.ftc.teamcode.util.opModes.SympleCommandOpMode;
+
+import java.util.HashMap;
 
 public class TeleOpRobotController extends RobotControllerBase {
     private final MecanumDriveSubsystem mecanumDriveSubsystem;
@@ -22,6 +32,7 @@ public class TeleOpRobotController extends RobotControllerBase {
     private final IntakeSubsystem intakeSubsystem;
     private final ElevatorSubsystem elevatorSubsystem;
     private final ExtenderSubsystem extenderSubsystem;
+    private final IntakeJointSubsystem intakeJointSubsystem;
 
     private TeleOpRobotController(HardwareMap hMap, Telemetry telemetry, Gamepad driverController, Gamepad actionController, TeamColor teamColor, String logFilePrefix, boolean logData) {
         super(hMap, telemetry, driverController, actionController, logFilePrefix, logData);
@@ -38,59 +49,87 @@ public class TeleOpRobotController extends RobotControllerBase {
         this.intakeSubsystem = new IntakeSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
         this.elevatorSubsystem = new ElevatorSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
         this.extenderSubsystem = new ExtenderSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
+        this.intakeJointSubsystem = new IntakeJointSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
     }
 
     @Override
     public void createKeyBindings() {
-//        this.actionController.getGamepadButton(GamepadKeys.Button.A)
-//                .toggleWhenPressed(
-//                        this.clawSubsystem.moveToState(RobotConstants.ClawConstants.ClawState.CLOSE),
-//                        this.clawSubsystem.moveToState(RobotConstants.ClawConstants.ClawState.OPEN)
-//                );
-//
-//        this.actionController.getGamepadButton(GamepadKeys.Button.B)
-//                .toggleWhenPressed(
-//                        this.scorerSubsystem.moveToState(RobotConstants.ScorerConstants.ScorerState.TAKE),
-//                        this.scorerSubsystem.moveToState(RobotConstants.ScorerConstants.ScorerState.SCORE)
-//                );
-//
-//        this.actionController.getGamepadButton(GamepadKeys.Button.Y)
-//                .toggleWhenPressed(
-//                        this.extenderSubsystem.goToState(RobotConstants.ExtenderConstants.ExtenderState.CLOSE),
-//                        this.extenderSubsystem.goToState(RobotConstants.ExtenderConstants.ExtenderState.OPEN)
-//                );
-//
-//        this.actionController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-//                .whenPressed(
-//                        this.intakeSubsystem.toggleState(RobotConstants.IntakeConstants.IntakeState.TAKE)
-//                );
-//
-//        this.actionController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-//                .whenPressed(
-//                        this.intakeSubsystem.toggleState(RobotConstants.IntakeConstants.IntakeState.DROP)
-//                );
-
         this.actionController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .toggleWhenPressed(
-                        this.elevatorSubsystem.goToState(RobotConstants.ElevatorConstants.ElevatorState.SCORE_TOP),
-                        this.elevatorSubsystem.goToState(RobotConstants.ElevatorConstants.ElevatorState.REST)
+                .whenPressed(
+                        new SelectCommand(
+                                new HashMap<Object, Command>(){{
+                                    put("up", TeleOpRobotController.this.elevatorSubsystem.goToState(RobotConstants.ElevatorConstants.ElevatorState.SCORE_TOP));
+                                    put("down", TeleOpRobotController.this.elevatorSubsystem.goToState(RobotConstants.ElevatorConstants.ElevatorState.REST));
+                                    put("score", new ParallelCommandGroup(
+                                            TeleOpRobotController.this.elevatorSubsystem.scoreOnChamber(),
+                                            new SequentialCommandGroup(
+                                                    new WaitCommand(1000),
+                                                    TeleOpRobotController.this.clawSubsystem.moveToState(RobotConstants.ClawConstants.ClawState.OPEN)
+                                            )
+                                    ));
+                                    put("no", new InstantCommand(() -> {}));
+                                }},
+                                () -> {
+                                    if(this.clawSubsystem.getState() == RobotConstants.ClawConstants.ClawState.CLOSE
+                                       && (this.elevatorSubsystem.getState() == RobotConstants.ElevatorConstants.ElevatorState.SCORE_TOP || this.elevatorSubsystem.getState() == RobotConstants.ElevatorConstants.ElevatorState.SCORE_BOTTOM)) {
+                                        return "score";
+                                    } else if (this.clawSubsystem.getState() == RobotConstants.ClawConstants.ClawState.OPEN) {
+                                        return "down";
+                                    } else {
+                                        return "up";
+                                    }
+                                }
+                        )
                 );
 
-        this.actionController.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(
-                        this.elevatorSubsystem.scoreOnChamber(RobotConstants.ElevatorConstants.ElevatorState.SCORE_TOP)
-                );
+//        this.actionController.getGamepadButton(GamepadKeys.Button.A)
+//                .whenPressed(
+//                        this.elevatorSubsystem.scoreOnChamber()
+//                );
 
         this.actionController.getGamepadButton(GamepadKeys.Button.B)
                 .toggleWhenPressed(
                         this.clawSubsystem.moveToState(RobotConstants.ClawConstants.ClawState.CLOSE),
                         this.clawSubsystem.moveToState(RobotConstants.ClawConstants.ClawState.OPEN)
                 );
+
+//        this.actionController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+//                .toggleWhenPressed(
+//                        this.elevatorSubsystem.goToState(RobotConstants.ElevatorConstants.ElevatorState.SCORE_BOTTOM),
+//                        this.elevatorSubsystem.goToState(RobotConstants.ElevatorConstants.ElevatorState.REST)
+//                );
+
+        this.actionController.getGamepadButton(GamepadKeys.Button.X)
+                .toggleWhenPressed(
+                        this.intakeJointSubsystem.moveToState(RobotConstants.IntakeJointConstants.JointState.TAKE),
+                        this.intakeJointSubsystem.moveToState(RobotConstants.IntakeJointConstants.JointState.IDLE)
+                );
+
+        this.actionController.getGamepadButton(GamepadKeys.Button.Y)
+                .whenPressed(
+                        this.intakeJointSubsystem.moveToState(RobotConstants.IntakeJointConstants.JointState.HUMAN_PLAYER)
+                );
+
+        new Trigger(() -> this.actionController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1)
+                .whenActive(
+                        this.intakeSubsystem.setState(RobotConstants.IntakeConstants.IntakeState.TAKE)
+                );
+
+        new Trigger(() -> this.actionController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1)
+                .whenActive(
+                        this.intakeSubsystem.setState(RobotConstants.IntakeConstants.IntakeState.DROP)
+                );
+
+        new Trigger(() -> this.actionController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) <= 0.1 && this.actionController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) <= 0.1)
+                .whileActiveContinuous(
+                        this.intakeSubsystem.setState(RobotConstants.IntakeConstants.IntakeState.IDLE)
+                );
     }
 
     @Override
     public void initialize() {
         this.mecanumDriveSubsystem.setDefaultCommand(new MecanumArcadeDriveCommand(this.mecanumDriveSubsystem, this.driverController));
+        this.extenderSubsystem.setDefaultCommand(this.extenderSubsystem.moveWithJoyStick(this.actionController));
     }
 
     @Override
@@ -100,7 +139,7 @@ public class TeleOpRobotController extends RobotControllerBase {
 
     @Override
     public void postInitialize() {
-
+        this.intakeJointSubsystem.moveToState(RobotConstants.IntakeJointConstants.JointState.IDLE).schedule();
     }
 
     @Override

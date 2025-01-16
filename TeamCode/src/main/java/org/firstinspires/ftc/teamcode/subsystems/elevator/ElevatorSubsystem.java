@@ -2,8 +2,11 @@ package org.firstinspires.ftc.teamcode.subsystems.elevator;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.Command;
+import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.command.FunctionalCommand;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.RunCommand;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
@@ -23,6 +26,8 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggerSubsystem 
     private final DataLogger dataLogger;
 
     private final TouchSensor touchSensor;
+
+    private ElevatorConstants.ElevatorState state = ElevatorConstants.ElevatorState.REST;
 
     public ElevatorSubsystem(HardwareMap hardwareMap, MultipleTelemetry telemetry, DataLogger dataLogger) {
         dataLogger.addData(DataLogger.DataType.INFO, "Initializing ElevatorSubsystem.");
@@ -48,11 +53,12 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggerSubsystem 
         this.getTelemetry().addData("elev pos", this.getCurrentPosition());
         this.getTelemetry().addData("elev cmd", this.getCurrentCommand() != null ? this.getCurrentCommand().getName() : "None");
         this.getTelemetry().addData("elev on ground", this.touchSensor.isPressed());
+        this.getTelemetry().addData("elev state", this.state.name());
 
         if (this.touchSensor.isPressed()) this.motors.resetEncoder();
     }
 
-    private void setPower(double power) {
+    protected void setPower(double power) {
         double finalPower = 0;
         double pos = this.getCurrentPosition();
 
@@ -66,7 +72,7 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggerSubsystem 
     /**
      * @return The current position in meters
      */
-    private double getCurrentPosition() {
+    protected double getCurrentPosition() {
         double leaderMotorPosition = this.motors.getPositions().get(0);
         return leaderMotorPosition * ElevatorConstants.METERS_PER_TICK;
     }
@@ -82,39 +88,28 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggerSubsystem 
         return telemetry;
     }
 
+    public ElevatorConstants.ElevatorState getState() {
+        return state;
+    }
+
     public Command holdElevator() {
         return new RunCommand(() -> this.setPower(0), this);
     }
 
     private Command goToPosition(double meters) {
-        PIDController pidController = new PIDController(ElevatorConstants.P, ElevatorConstants.I, ElevatorConstants.D);
-
-        return new FunctionalCommand(
-                // init
-                () -> {
-                    pidController.reset();
-                    pidController.setTolerance(0.01);
-                    pidController.setSetPoint(meters);
-                },
-                // execute
-                () -> {
-                    double power = pidController.calculate(this.getCurrentPosition());
-                    this.setPower(power);
-                },
-                // end
-                (interrupted) -> {
-
-                },
-                pidController::atSetPoint,
-                this
-        );
+        return new ElevatorGoToPositionCommand(this, meters);
     }
 
     public Command goToState(ElevatorConstants.ElevatorState state) {
-        return goToPosition(state.getMeters());
+        return new InstantCommand(() -> this.state = state, this)
+                .andThen(goToPosition(state.getMeters()));
     }
 
     public Command scoreOnChamber(ElevatorConstants.ElevatorState state) {
-        return goToPosition(state.getMeters() - 0.1);
+        return goToPosition(state.getMeters() + ElevatorConstants.SCORE_OFFSET);
+    }
+
+    public Command scoreOnChamber() {
+        return new ElevatorScoreOnChamberCommand(this);
     }
 }

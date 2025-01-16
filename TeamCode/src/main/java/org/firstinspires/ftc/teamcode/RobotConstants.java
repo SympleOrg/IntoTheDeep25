@@ -18,9 +18,8 @@ public class RobotConstants {
 
         public static final double Ks = 0;
 
-        // the values are *not* correct, but it works fine so fuck it
-        public static final RevHubOrientationOnRobot.LogoFacingDirection LOGO_FACING_DIRECTION = RevHubOrientationOnRobot.LogoFacingDirection.LEFT; // this should be LEFT
-        public static final RevHubOrientationOnRobot.UsbFacingDirection USB_FACING_DIRECTION = RevHubOrientationOnRobot.UsbFacingDirection.UP; // this should be UP
+        public static final RevHubOrientationOnRobot.LogoFacingDirection LOGO_FACING_DIRECTION = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
+        public static final RevHubOrientationOnRobot.UsbFacingDirection USB_FACING_DIRECTION = RevHubOrientationOnRobot.UsbFacingDirection.UP;
     }
 
     @Config
@@ -33,6 +32,8 @@ public class RobotConstants {
 
         public static double MAX_HEIGHT = 0.94;
         public static double MIN_HEIGHT = -0.05;
+
+        public static double SCORE_OFFSET = -0.1;
 
         public static final double GEAR_RATIO = 1;
         public static final double WHEEL_RADIUS = 0.0382 * 0.5; // cry about it
@@ -49,6 +50,8 @@ public class RobotConstants {
             SCORE_BOTTOM(0.15),
             REST(0);
 
+
+
             private final double meters;
 
             ElevatorState(double meters) {
@@ -61,14 +64,15 @@ public class RobotConstants {
         }
     }
 
+    @Config
     public static class ExtenderConstants {
-        public static final double Kp = 0;
-        public static final double Ki = 0;
-        public static final double Kd = 0;
+        public static double Kp = 0.4;
+        public static double Ki = 0;
+        public static double Kd = 0;
 
         public enum ExtenderState {
             CLOSE(0),
-            OPEN(30);
+            OPEN(55);
 
             private final double deg;
 
@@ -85,8 +89,8 @@ public class RobotConstants {
     public static class ClawConstants {
 
         public enum ClawState {
-            OPEN(40),
-            CLOSE(180);
+            OPEN(110),
+            CLOSE(165);
             private final double deg;
 
             ClawState(double deg) {
@@ -126,6 +130,24 @@ public class RobotConstants {
             private final double deg;
 
             ScorerState(double deg) {
+                this.deg = deg;
+            }
+
+            public double getDeg() {
+                return deg;
+            }
+        }
+    }
+
+    public static class IntakeJointConstants {
+        public enum JointState {
+            TAKE(140),
+            HUMAN_PLAYER(180),
+            IDLE(300);
+
+            private final double deg;
+
+            JointState(double deg) {
                 this.deg = deg;
             }
 

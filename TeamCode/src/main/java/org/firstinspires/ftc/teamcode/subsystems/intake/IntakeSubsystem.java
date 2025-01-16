@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.subsystems.intake;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
+import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.StartEndCommand;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -34,7 +35,8 @@ public class IntakeSubsystem extends SubsystemBase implements LoggerSubsystem {
 
     public Command setState(RobotConstants.IntakeConstants.IntakeState state) {
         this.currentState = state;
-        return new StartEndCommand(() -> this.set(state.getPower()), () -> this.set(0), this);
+        return new RunCommand(() -> this.set(state.getPower()), this)
+                .whenFinished(() -> this.set(0));
     }
 
     public Command toggleState(RobotConstants.IntakeConstants.IntakeState state) {

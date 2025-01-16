@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsystems.claw;
+package org.firstinspires.ftc.teamcode.subsystems.intakejoint;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.Command;
@@ -12,33 +12,22 @@ import org.firstinspires.ftc.teamcode.util.DataLogger;
 import org.firstinspires.ftc.teamcode.util.LoggerSubsystem;
 import org.firstinspires.ftc.teamcode.util.SympleServo;
 
-public class ClawSubsystem extends SubsystemBase implements LoggerSubsystem {
+public class IntakeJointSubsystem extends SubsystemBase implements LoggerSubsystem {
     private final SympleServo servo;
     private final MultipleTelemetry telemetry;
     private final DataLogger dataLogger;
-    private RobotConstants.ClawConstants.ClawState state = RobotConstants.ClawConstants.ClawState.CLOSE;
 
-    public ClawSubsystem(HardwareMap hardwareMap, MultipleTelemetry telemetry, DataLogger dataLogger) {
+    public IntakeJointSubsystem(HardwareMap hardwareMap, MultipleTelemetry telemetry, DataLogger dataLogger) {
         dataLogger.addData(DataLogger.DataType.INFO, "Initializing ClawSubsystem.");
 
         this.telemetry = telemetry;
         this.dataLogger = dataLogger;
 
-        this.servo = new SympleServo(hardwareMap, ServoMap.CLAW.getId(), 0, 300);
+        this.servo = new SympleServo(hardwareMap, ServoMap.INTAKE_JOINT.getId(), 0, 300);
     }
 
-    @Override
-    public void periodic() {
-        getTelemetry().addData("claw state",  this.getState().name());
-    }
-
-    private void setState(RobotConstants.ClawConstants.ClawState state) {
-        this.state = state;
+    private void setState(RobotConstants.IntakeJointConstants.JointState state) {
         this.servo.turnToAngle(state.getDeg());
-    }
-
-    public RobotConstants.ClawConstants.ClawState getState() {
-        return state;
     }
 
     @Override
@@ -51,7 +40,7 @@ public class ClawSubsystem extends SubsystemBase implements LoggerSubsystem {
         return telemetry;
     }
 
-    public Command moveToState(RobotConstants.ClawConstants.ClawState state) {
+    public Command moveToState(RobotConstants.IntakeJointConstants.JointState state) {
         return new InstantCommand(() -> this.setState(state), this);
     }
 }

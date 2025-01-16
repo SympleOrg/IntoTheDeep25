@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems.driveTrain;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.arcrobotics.ftclib.geometry.Vector2d;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -9,7 +10,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.managers.RobotPositionManager;
 import org.firstinspires.ftc.teamcode.maps.MotorMap;
 import org.firstinspires.ftc.teamcode.util.DataLogger;
+import org.firstinspires.ftc.teamcode.util.MecanumChassisUtils;
+
 import java.util.HashMap;
+import java.util.Vector;
+import java.util.function.Function;
 
 public class MecanumDriveSubsystem extends SubsystemBase implements IDriveTrainSubsystem {
     private final MultipleTelemetry telemetry;
@@ -44,6 +49,13 @@ public class MecanumDriveSubsystem extends SubsystemBase implements IDriveTrainS
             return;
         }
         m.set(power);
+    }
+
+    public void moveMotors(MecanumChassisUtils.MecanumWheelSpeeds mecanumWheelSpeeds) {
+        this.moveMotor(MecanumDriveSubsystem.MotorNames.FRONT_LEFT, mecanumWheelSpeeds.getFrontLeft());
+        this.moveMotor(MecanumDriveSubsystem.MotorNames.FRONT_RIGHT, mecanumWheelSpeeds.getFrontRight());
+        this.moveMotor(MecanumDriveSubsystem.MotorNames.BACK_LEFT, mecanumWheelSpeeds.getBackLeft());
+        this.moveMotor(MecanumDriveSubsystem.MotorNames.BACK_RIGHT, mecanumWheelSpeeds.getBackRight());
     }
 
     @Override

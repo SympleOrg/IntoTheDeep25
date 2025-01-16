@@ -13,7 +13,8 @@ public enum ServoMap {
     CLAW("claw"),
     SCORER("scorer"),
     INTAKE("intake"),
-    EXTENDER("extender");
+    INTAKE_JOINT("intake_joint");
+
     private final String id;
 
     ServoMap(String id) {
