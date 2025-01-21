@@ -73,7 +73,7 @@ public class MecanumChassisUtils {
         }
 
         public double getBackRight() {
-            return speeds[4];
+            return speeds[3];
         }
 
         public double[] getSpeeds() {

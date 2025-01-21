@@ -7,8 +7,6 @@ import static org.firstinspires.ftc.teamcode.RobotConstants.ExtenderConstants.Kp
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.FunctionalCommand;
-import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
@@ -23,7 +21,6 @@ import org.firstinspires.ftc.teamcode.maps.MotorMap;
 
 import org.firstinspires.ftc.teamcode.util.DataLogger;
 import org.firstinspires.ftc.teamcode.util.LoggerSubsystem;
-import org.firstinspires.ftc.teamcode.util.MathUtil;
 
 import top.symple.symplegraphdisplay.managers.data.DataListenerGroup;
 
@@ -47,7 +44,7 @@ public class ExtenderSubsystem extends SubsystemBase implements LoggerSubsystem,
 
     @Override
     public void periodic() {
-        this.telemetry.addData("extenderAngle", this.getCurrentPosition());
+        this.telemetry.addData("extender dist", this.getCurrentPosition());
     }
 
     private void setPower(double power) {
@@ -55,52 +52,36 @@ public class ExtenderSubsystem extends SubsystemBase implements LoggerSubsystem,
     }
 
     private double getCurrentPosition() {
-        return MathUtil.countsToDeg(this.motor.getCurrentPosition(), MotorMap.EXTENDER.getTicksPerRev());
+        return RobotConstants.ExtenderConstants.METER_PER_TICK * this.motor.getCurrentPosition();
     }
 
     public Command goToState(RobotConstants.ExtenderConstants.ExtenderState state) {
+        PIDController pidController = new PIDController(Kp, Ki, Kd);
+
         return new FunctionalCommand(
-                () -> { },
+                // init
                 () -> {
-                    double err = state.getDeg() - this.getCurrentPosition();
-                    this.setPower(Math.signum(err) * Kp);
+                    pidController.reset();
+                    pidController.setTolerance(0);
+                    pidController.setSetPoint(state.getMeter());
                 },
-                (i) -> { },
+                // execute
                 () -> {
-                    double err = state.getDeg() - this.getCurrentPosition();
-                    return err < 0.25;
+                    double power = pidController.calculate(this.getCurrentPosition());
+                    this.setPower(power);
                 },
+                // end
+                (interrupted) -> {},
+                pidController::atSetPoint,
                 this
         );
     }
-
-//    public Command goToState(RobotConstants.ExtenderConstants.ExtenderState state) {
-//        PIDController pidController = new PIDController(Kp, Ki, Kd);
-//
-//        return new FunctionalCommand(
-//                // init
-//                () -> {
-//                    pidController.reset();
-//                    pidController.setTolerance(0);
-//                    pidController.setSetPoint(state.getDeg());
-//                },
-//                // execute
-//                () -> {
-//                    double power = pidController.calculate(this.getCurrentPosition());
-//                    this.setPower(power);
-//                },
-//                // end
-//                (interrupted) -> {},
-//                pidController::atSetPoint,
-//                this
-//        );
-//    }
 
     public Command moveWithJoyStick(GamepadEx gamepadEx) {
         return new RunCommand(() -> {
             double power = Math.pow(Math.abs(Kp * gamepadEx.getLeftY()), 0.5) * Math.signum(gamepadEx.getLeftY());
             double jY = gamepadEx.getLeftY();
-            this.setPower(power);
+            this.setPower(gamepadEx.getLeftY());
         }, this);
     }
 

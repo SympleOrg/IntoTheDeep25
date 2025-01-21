@@ -70,18 +70,22 @@ public class RobotConstants {
         public static double Ki = 0;
         public static double Kd = 0;
 
+        public static final double WHEEL_RADIUS = 0.0191;
+        public static final double METER_PER_REV = (2 * Math.PI * WHEEL_RADIUS);
+        public static final double METER_PER_TICK = METER_PER_REV / MotorMap.EXTENDER.getTicksPerRev();
+
         public enum ExtenderState {
             CLOSE(0),
             OPEN(55);
 
-            private final double deg;
+            private final double meter;
 
-            ExtenderState(double deg) {
-                this.deg = deg;
+            ExtenderState(double meter) {
+                this.meter = meter;
             }
 
-            public double getDeg() {
-                return deg;
+            public double getMeter() {
+                return meter;
             }
         }
     }
