@@ -46,7 +46,6 @@ public class IntakeSubsystem extends SubsystemBase implements LoggerSubsystem {
         );
     }
 
-
     @Override
     public DataLogger getDataLogger() {
         return dataLogger;

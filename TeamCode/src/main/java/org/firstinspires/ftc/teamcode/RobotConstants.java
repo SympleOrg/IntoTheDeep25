@@ -38,7 +38,6 @@ public class RobotConstants {
         public static final double GEAR_RATIO = 1;
         public static final double WHEEL_RADIUS = 0.0382 * 0.5; // cry about it
 
-
         public static final double METERS_PER_REV = (Math.PI * 2) * WHEEL_RADIUS;
         public static final double METERS_PER_TICK = (METERS_PER_REV / (MotorMap.ELEVATOR_LEFT.getTicksPerRev() * GEAR_RATIO));
 
@@ -49,7 +48,6 @@ public class RobotConstants {
             SCORE_TOP(0.45),
             SCORE_BOTTOM(0.15),
             REST(0);
-
 
 
             private final double meters;
