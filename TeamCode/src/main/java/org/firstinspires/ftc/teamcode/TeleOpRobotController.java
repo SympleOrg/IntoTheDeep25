@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.arcrobotics.ftclib.command.Command;
+import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.SelectCommand;
@@ -101,8 +102,8 @@ public class TeleOpRobotController extends RobotControllerBase {
 
         this.actionController.getGamepadButton(GamepadKeys.Button.X)
                 .toggleWhenPressed(
-                        this.intakeJointSubsystem.moveToState(RobotConstants.IntakeJointConstants.JointState.TAKE),
-                        this.intakeJointSubsystem.moveToState(RobotConstants.IntakeJointConstants.JointState.IDLE)
+                        this.intakeJointSubsystem.moveToState(RobotConstants.IntakeJointConstants.JointState.PRETAKE),
+                        this.intakeJointSubsystem.moveToState(RobotConstants.IntakeJointConstants.JointState.CLOSED)
                 );
 
         this.actionController.getGamepadButton(GamepadKeys.Button.Y)
@@ -112,7 +113,14 @@ public class TeleOpRobotController extends RobotControllerBase {
 
         new Trigger(() -> this.actionController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1)
                 .whenActive(
-                        this.intakeSubsystem.setState(RobotConstants.IntakeConstants.IntakeState.TAKE)
+                        new ParallelCommandGroup(
+                                this.intakeSubsystem.setState(RobotConstants.IntakeConstants.IntakeState.TAKE),
+                                new ConditionalCommand(
+                                        this.intakeJointSubsystem.moveToState(RobotConstants.IntakeJointConstants.JointState.TAKE),
+                                        new InstantCommand(),
+                                        () -> this.intakeJointSubsystem.getState() == RobotConstants.IntakeJointConstants.JointState.PRETAKE
+                                )
+                        )
                 );
 
         new Trigger(() -> this.actionController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1)
@@ -122,8 +130,15 @@ public class TeleOpRobotController extends RobotControllerBase {
 
         new Trigger(() -> this.actionController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) <= 0.1 && this.actionController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) <= 0.1)
                 .whileActiveContinuous(
-                        this.intakeSubsystem.setState(RobotConstants.IntakeConstants.IntakeState.IDLE)
-                );
+                    new ParallelCommandGroup(
+                            this.intakeSubsystem.setState(RobotConstants.IntakeConstants.IntakeState.IDLE),
+                            new ConditionalCommand(
+                                    this.intakeJointSubsystem.moveToState(RobotConstants.IntakeJointConstants.JointState.PRETAKE),
+                                    new InstantCommand(),
+                                    () -> this.intakeJointSubsystem.getState() == RobotConstants.IntakeJointConstants.JointState.TAKE
+                            )
+                    )
+            );
     }
 
     @Override
@@ -139,7 +154,7 @@ public class TeleOpRobotController extends RobotControllerBase {
 
     @Override
     public void postInitialize() {
-        this.intakeJointSubsystem.moveToState(RobotConstants.IntakeJointConstants.JointState.IDLE).schedule();
+        this.intakeJointSubsystem.moveToState(RobotConstants.IntakeJointConstants.JointState.CLOSED).schedule();
     }
 
     @Override

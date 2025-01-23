@@ -12,7 +12,6 @@ package org.firstinspires.ftc.teamcode.maps;
 public enum ServoMap {
     CLAW("claw"),
     SCORER("scorer"),
-    INTAKE("intake"),
     INTAKE_JOINT("intake_joint");
 
     private final String id;

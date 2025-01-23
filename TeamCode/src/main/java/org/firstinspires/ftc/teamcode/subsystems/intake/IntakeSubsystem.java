@@ -6,16 +6,18 @@ import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.StartEndCommand;
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.RobotConstants;
+import org.firstinspires.ftc.teamcode.maps.MotorMap;
 import org.firstinspires.ftc.teamcode.maps.ServoMap;
 import org.firstinspires.ftc.teamcode.util.DataLogger;
 import org.firstinspires.ftc.teamcode.util.LoggerSubsystem;
 
 public class IntakeSubsystem extends SubsystemBase implements LoggerSubsystem {
-    private final CRServo servo;
+    private final MotorEx motor;
     private final MultipleTelemetry telemetry;
     private final DataLogger dataLogger;
 
@@ -24,19 +26,19 @@ public class IntakeSubsystem extends SubsystemBase implements LoggerSubsystem {
     public IntakeSubsystem(HardwareMap hardwareMap, MultipleTelemetry telemetry, DataLogger dataLogger) {
         dataLogger.addData(DataLogger.DataType.INFO, "Initializing IntakeSubsystem.");
 
-        this.servo = hardwareMap.get(CRServo.class, ServoMap.INTAKE.getId());
+        this.motor = new MotorEx(hardwareMap, MotorMap.INTAKE.getId());
         this.telemetry = telemetry;
         this.dataLogger = dataLogger;
     }
 
-    private void set(double power) {
-        this.servo.setPower(power);
+    private void moveMotor(double power) {
+        this.motor.set(power);
     }
 
     public Command setState(RobotConstants.IntakeConstants.IntakeState state) {
         this.currentState = state;
-        return new RunCommand(() -> this.set(state.getPower()), this)
-                .whenFinished(() -> this.set(0));
+        return new RunCommand(() -> this.moveMotor(state.getPower()), this)
+                .whenFinished(() -> this.moveMotor(0));
     }
 
     public Command toggleState(RobotConstants.IntakeConstants.IntakeState state) {

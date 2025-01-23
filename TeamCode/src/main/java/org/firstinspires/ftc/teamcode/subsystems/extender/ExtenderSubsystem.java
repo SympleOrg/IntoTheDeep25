@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems.extender;
 
-import static org.firstinspires.ftc.teamcode.RobotConstants.ExtenderConstants.Kd;
-import static org.firstinspires.ftc.teamcode.RobotConstants.ExtenderConstants.Ki;
-import static org.firstinspires.ftc.teamcode.RobotConstants.ExtenderConstants.Kp;
+import static org.firstinspires.ftc.teamcode.RobotConstants.ExtenderConstants.MAX_POS;
+import static org.firstinspires.ftc.teamcode.RobotConstants.ExtenderConstants.MIN_POS;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.Command;
@@ -48,40 +47,20 @@ public class ExtenderSubsystem extends SubsystemBase implements LoggerSubsystem,
     }
 
     private void setPower(double power) {
-        this.motor.set(power);
+        double finalPower = power;
+        double currentPos = getCurrentPosition();
+        if(currentPos >= MAX_POS && -power > 0) finalPower = 0;
+        if(currentPos <= MIN_POS && -power < 0) finalPower = 0;
+        this.motor.set(finalPower);
     }
 
     private double getCurrentPosition() {
         return RobotConstants.ExtenderConstants.METER_PER_TICK * this.motor.getCurrentPosition();
     }
 
-    public Command goToState(RobotConstants.ExtenderConstants.ExtenderState state) {
-        PIDController pidController = new PIDController(Kp, Ki, Kd);
-
-        return new FunctionalCommand(
-                // init
-                () -> {
-                    pidController.reset();
-                    pidController.setTolerance(0);
-                    pidController.setSetPoint(state.getMeter());
-                },
-                // execute
-                () -> {
-                    double power = pidController.calculate(this.getCurrentPosition());
-                    this.setPower(power);
-                },
-                // end
-                (interrupted) -> {},
-                pidController::atSetPoint,
-                this
-        );
-    }
-
     public Command moveWithJoyStick(GamepadEx gamepadEx) {
         return new RunCommand(() -> {
-            double power = Math.pow(Math.abs(Kp * gamepadEx.getLeftY()), 0.5) * Math.signum(gamepadEx.getLeftY());
-            double jY = gamepadEx.getLeftY();
-            this.setPower(gamepadEx.getLeftY());
+            this.setPower(gamepadEx.getRightY());
         }, this);
     }
 

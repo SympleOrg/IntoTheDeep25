@@ -17,6 +17,8 @@ public class IntakeJointSubsystem extends SubsystemBase implements LoggerSubsyst
     private final MultipleTelemetry telemetry;
     private final DataLogger dataLogger;
 
+    private RobotConstants.IntakeJointConstants.JointState state;
+
     public IntakeJointSubsystem(HardwareMap hardwareMap, MultipleTelemetry telemetry, DataLogger dataLogger) {
         dataLogger.addData(DataLogger.DataType.INFO, "Initializing ClawSubsystem.");
 
@@ -27,7 +29,12 @@ public class IntakeJointSubsystem extends SubsystemBase implements LoggerSubsyst
     }
 
     private void setState(RobotConstants.IntakeJointConstants.JointState state) {
+        this.state = state;
         this.servo.turnToAngle(state.getDeg());
+    }
+
+    public RobotConstants.IntakeJointConstants.JointState getState() {
+        return state;
     }
 
     @Override

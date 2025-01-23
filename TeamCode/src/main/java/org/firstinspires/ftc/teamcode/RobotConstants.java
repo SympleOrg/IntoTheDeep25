@@ -66,28 +66,12 @@ public class RobotConstants {
 
     @Config
     public static class ExtenderConstants {
-        public static double Kp = 0.4;
-        public static double Ki = 0;
-        public static double Kd = 0;
+        public static final double MIN_POS = 0;
+        public static final double MAX_POS = 0.215;
 
         public static final double WHEEL_RADIUS = 0.0191;
         public static final double METER_PER_REV = (2 * Math.PI * WHEEL_RADIUS);
         public static final double METER_PER_TICK = METER_PER_REV / MotorMap.EXTENDER.getTicksPerRev();
-
-        public enum ExtenderState {
-            CLOSE(0),
-            OPEN(55);
-
-            private final double meter;
-
-            ExtenderState(double meter) {
-                this.meter = meter;
-            }
-
-            public double getMeter() {
-                return meter;
-            }
-        }
     }
 
     public static class ClawConstants {
@@ -145,9 +129,10 @@ public class RobotConstants {
 
     public static class IntakeJointConstants {
         public enum JointState {
-            TAKE(140),
-            HUMAN_PLAYER(180),
-            IDLE(300);
+            TAKE(36),
+            PRETAKE(65),
+            HUMAN_PLAYER(110),
+            CLOSED(300);
 
             private final double deg;
 

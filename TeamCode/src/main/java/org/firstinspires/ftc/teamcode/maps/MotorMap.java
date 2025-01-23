@@ -16,7 +16,8 @@ public enum MotorMap {
     LEG_BACK_RIGHT("leg_back_right", 0, 312),
     ELEVATOR_LEFT("elevator_left", 537.7, 312),
     ELEVATOR_RIGHT("elevator_right", 537.7, 312),
-    EXTENDER("extender",	384.5, 435);
+    EXTENDER("extender",	384.5, 435),
+    INTAKE("intake",	312, 0);
 
 
     private final String id;
