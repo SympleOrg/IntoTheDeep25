@@ -2,12 +2,15 @@ package org.firstinspires.ftc.teamcode.subsystems.driveTrain;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.managers.RobotPositionManager;
 import org.firstinspires.ftc.teamcode.maps.MotorMap;
 import org.firstinspires.ftc.teamcode.util.DataLogger;
+import org.firstinspires.ftc.teamcode.util.MecanumChassisUtils;
+
 import java.util.HashMap;
 
 public class MecanumDriveSubsystem extends SubsystemBase implements IDriveTrainSubsystem {
@@ -29,6 +32,11 @@ public class MecanumDriveSubsystem extends SubsystemBase implements IDriveTrainS
         this.getDataLogger().addData(DataLogger.DataType.INFO, this.getClass().getSimpleName() + ": Inverting motors");
         this.motors.get(MotorNames.FRONT_RIGHT).setInverted(true);
         this.motors.get(MotorNames.BACK_RIGHT).setInverted(true);
+
+        this.motors.get(MotorNames.FRONT_LEFT).setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        this.motors.get(MotorNames.FRONT_RIGHT).setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        this.motors.get(MotorNames.BACK_LEFT).setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        this.motors.get(MotorNames.BACK_RIGHT).setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
     }
 
     public void moveMotor(MotorNames motor, double power) {
@@ -38,6 +46,18 @@ public class MecanumDriveSubsystem extends SubsystemBase implements IDriveTrainS
             return;
         }
         m.set(power);
+    }
+
+    public void moveMotors(MecanumChassisUtils.MecanumWheelSpeeds mecanumWheelSpeeds) {
+        this.moveMotor(MecanumDriveSubsystem.MotorNames.FRONT_LEFT, mecanumWheelSpeeds.getFrontLeft());
+        this.moveMotor(MecanumDriveSubsystem.MotorNames.FRONT_RIGHT, mecanumWheelSpeeds.getFrontRight());
+        this.moveMotor(MecanumDriveSubsystem.MotorNames.BACK_LEFT, mecanumWheelSpeeds.getBackLeft());
+        this.moveMotor(MecanumDriveSubsystem.MotorNames.BACK_RIGHT, mecanumWheelSpeeds.getBackRight());
+    }
+
+    @Override
+    public void periodic() {
+        getTelemetry().addData("angle", this.getHeading());
     }
 
     @Override

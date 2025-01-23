@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode.subsystems.driveTrain.commands.mecanumDri
 
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.controller.PController;
+import com.arcrobotics.ftclib.geometry.Vector2d;
 
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.MecanumDriveSubsystem;
+import org.firstinspires.ftc.teamcode.util.MecanumChassisUtils;
 
 public class StrafeInAngleMecanumCommand extends CommandBase {
     private final double angle;
@@ -38,7 +40,7 @@ public class StrafeInAngleMecanumCommand extends CommandBase {
     public void execute() {
         double hSpeed = Math.cos(Math.toRadians(angle)) * meters;
         double vSpeed = Math.sin(Math.toRadians(angle)) * meters;
-
+        Vector2d vector2d = new Vector2d(hSpeed, vSpeed);
 
         double forwardDistanceMoved = this.subsystem.getForwardDistanceDriven() - this.STARTING_FORWARD_DIST;
         double sideDistanceMoved = this.subsystem.getSideDistanceDriven() - this.STARTING_SIDE_DIST;
@@ -46,34 +48,10 @@ public class StrafeInAngleMecanumCommand extends CommandBase {
         double currentDist = Math.hypot(forwardDistanceMoved, sideDistanceMoved); // => √x*x + y*y
         double powerMultiplier = this.pController.calculate(currentDist);
 
-        double rawFrontRightSpeed = (vSpeed + hSpeed) * powerMultiplier;
-        double rawBackRightSpeed = (vSpeed - hSpeed) * powerMultiplier;
-        double rawFrontLeftSpeed = (vSpeed - hSpeed) * powerMultiplier;
-        double rawBackLeftSpeed = (vSpeed + hSpeed) * powerMultiplier;
+        MecanumChassisUtils.MecanumWheelSpeeds mecanumWheelSpeeds = MecanumChassisUtils.chassisSpeedToWheelSpeeds(vector2d, 0)
+                .mul(powerMultiplier);
 
-        double normalizedFrontRightSpeed = rawFrontRightSpeed;
-        double normalizedBackRightSpeed = rawBackRightSpeed;
-        double normalizedFrontLeftSpeed = rawFrontLeftSpeed;
-        double normalizedBackLeftSpeed = rawBackLeftSpeed;
-
-        double absFrontRightSpeed = Math.abs(rawFrontRightSpeed);
-        double absBackRightSpeed = Math.abs(rawBackRightSpeed);
-        double absFrontLeftSpeed = Math.abs(rawFrontLeftSpeed);
-        double absBackLeftSpeed = Math.abs(rawBackLeftSpeed);
-
-        double maxSpeed = Math.max(absFrontRightSpeed, Math.max(absBackRightSpeed, Math.max(absFrontLeftSpeed, absBackLeftSpeed)));
-
-        if (maxSpeed > 1) {
-            normalizedFrontRightSpeed /= maxSpeed;
-            normalizedBackRightSpeed /= maxSpeed;
-            normalizedFrontLeftSpeed /= maxSpeed;
-            normalizedBackLeftSpeed /= maxSpeed;
-        }
-
-        this.subsystem.moveMotor(MecanumDriveSubsystem.MotorNames.FRONT_RIGHT, normalizedFrontRightSpeed);
-        this.subsystem.moveMotor(MecanumDriveSubsystem.MotorNames.BACK_RIGHT, normalizedBackRightSpeed);
-        this.subsystem.moveMotor(MecanumDriveSubsystem.MotorNames.FRONT_LEFT, normalizedFrontLeftSpeed);
-        this.subsystem.moveMotor(MecanumDriveSubsystem.MotorNames.BACK_LEFT, normalizedBackLeftSpeed);
+        this.subsystem.moveMotors(mecanumWheelSpeeds);
     }
 
     @Override
