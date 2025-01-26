@@ -21,6 +21,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.managers.RobotPositionManager;
 import org.firstinspires.ftc.teamcode.maps.MotorMap;
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.commands.FollowTrajectoryCommand;
+import org.firstinspires.ftc.teamcode.trajectories.AutoPath;
 import org.firstinspires.ftc.teamcode.util.DataLogger;
 import org.firstinspires.ftc.teamcode.util.LoggerSubsystem;
 import org.firstinspires.ftc.teamcode.util.MathUtil;
@@ -34,6 +35,8 @@ public class MecanumDriveSubsystem extends SubsystemBase implements IDriveTrainS
     private final ThreeDeadWheelLocalizer localizer;
 
     private final MecanumChassisWheelsSet wheelsSet;
+
+    private AutoPath autoPath;
 
     public MecanumDriveSubsystem(HardwareMap hardwareMap, MultipleTelemetry telemetry, DataLogger dataLogger) {
         this.telemetry = telemetry;
@@ -90,10 +93,14 @@ public class MecanumDriveSubsystem extends SubsystemBase implements IDriveTrainS
                 pose2d.getRotation()
         );
         double radius = MathUtil.meterToInch(DriveConstants.ROBOT_RADIUS);
-        packet.fieldOverlay()
+        Canvas canvas = packet.fieldOverlay()
                 .setStrokeWidth(1)
                 .strokeCircle(drawPose.getX(), drawPose.getY(), radius)
                 .strokeLine(drawPose.getX(), drawPose.getY(), drawPose.getX() + drawPose.getRotation().getCos() * radius,  drawPose.getY() + drawPose.getRotation().getSin() * radius);
+
+        if(autoPath != null) {
+            autoPath.drawPath(canvas);
+        }
 
         FtcDashboard.getInstance().sendTelemetryPacket(packet);
     }
@@ -142,6 +149,15 @@ public class MecanumDriveSubsystem extends SubsystemBase implements IDriveTrainS
     @Override
     public double getHeading() {
         return RobotPositionManager.getInstance().getHeadingByGyro();
+    }
+
+    public AutoPath setAutoPath(AutoPath autoPath) {
+        this.autoPath = autoPath;
+        return this.autoPath;
+    }
+
+    public AutoPath getAutoPath() {
+        return autoPath;
     }
 
     @Override

@@ -11,6 +11,8 @@ import org.firstinspires.ftc.teamcode.subsystems.driveTrain.AutoableDriveTrain;
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.DriveConstants;
 
 public class FollowTrajectoryCommand extends RamseteCommand {
+    private final Trajectory trajectory;
+
     public FollowTrajectoryCommand(AutoableDriveTrain subsystem, Trajectory trajectory) {
         super(
                 trajectory,
@@ -37,5 +39,11 @@ public class FollowTrajectoryCommand extends RamseteCommand {
         );
 
         addRequirements(subsystem);
+
+        this.trajectory = trajectory;
+    }
+
+    public Trajectory getTrajectory() {
+        return trajectory;
     }
 }

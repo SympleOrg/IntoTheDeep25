@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.MecanumDriveSubsystem;
+import org.firstinspires.ftc.teamcode.trajectories.AutoPath;
 import org.firstinspires.ftc.teamcode.trajectories.Trajectories;
 import org.firstinspires.ftc.teamcode.util.opModes.SympleCommandOpMode;
 
@@ -35,7 +36,9 @@ public class AutoRobotController extends RobotControllerBase {
 
     @Override
     public void postInitialize() {
-        this.mecanumDriveSubsystem.followTrajectory(Trajectories.testTrajectory()).schedule();
+        AutoPath autoPath = Trajectories.getPath(Trajectories.Paths.PARK, mecanumDriveSubsystem);
+        this.mecanumDriveSubsystem.setAutoPath(autoPath)
+                .follow();
     }
 
     @Override

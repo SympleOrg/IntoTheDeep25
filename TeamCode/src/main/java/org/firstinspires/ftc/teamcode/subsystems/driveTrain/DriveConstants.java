@@ -31,14 +31,14 @@ public class DriveConstants {
     public static class RamsetController {
         @Config
         public static class Feedforward {
-            public static double Ks = 0.1;
-            public static double Kv = 0.175;
-            public static double Ka = 0.001;
+            public static double Ks = 0;
+            public static double Kv = 0;
+            public static double Ka = 0;
         }
 
         @Config
         public static class PID {
-            public static double Kp = 0.05;
+            public static double Kp = 0.15;
             public static double Ki = 0;
             public static double Kd = 0;
         }

@@ -6,22 +6,32 @@ import com.arcrobotics.ftclib.trajectory.Trajectory;
 import com.arcrobotics.ftclib.trajectory.TrajectoryConfig;
 import com.arcrobotics.ftclib.trajectory.TrajectoryGenerator;
 
+import org.firstinspires.ftc.teamcode.subsystems.driveTrain.AutoableDriveTrain;
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.DriveConstants;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Trajectories {
-    public static Trajectory testTrajectory() {
-        List<Pose2d> waypoints = new ArrayList<>();
-        waypoints.add(new Pose2d(0, 0, Rotation2d.fromDegrees(0)));
-        waypoints.add(new Pose2d(0, 0.2, Rotation2d.fromDegrees(45)));
-        waypoints.add(new Pose2d(0, 0, Rotation2d.fromDegrees(0)));
-//        waypoints.add(new Pose2d(2.38, 0, Rotation2d.fromDegrees(-90)));
-//        waypoints.add(new Pose2d(2.38, 2.38, Rotation2d.fromDegrees(-180)));
-//        waypoints.add(new Pose2d(0, 2.38, Rotation2d.fromDegrees(-270)));
-//        waypoints.add(new Pose2d(0, 0, Rotation2d.fromDegrees(-360)));
+    public static AutoPath getPath(Paths paths, AutoableDriveTrain driveTrain) {
+        switch (paths) {
+            case PARK:
+                return createParkTrajectory(driveTrain);
+        }
 
-        return TrajectoryGenerator.generateTrajectory(waypoints, DriveConstants.TRAJECTORY_CONFIG);
+        return null;
+    };
+
+    public static AutoPath createParkTrajectory(AutoableDriveTrain driveTrain) {
+        return new AutoPath.Builder(driveTrain, DriveConstants.TRAJECTORY_CONFIG)
+                .followPath(builder -> builder
+                        .setNextPoint(new Pose2d(0, 0, Rotation2d.fromDegrees(0)))
+                        .setNextPoint(new Pose2d(1, 0, Rotation2d.fromDegrees(0)))
+                )
+                .build();
+    }
+
+    public enum Paths {
+        PARK;
     }
 }
