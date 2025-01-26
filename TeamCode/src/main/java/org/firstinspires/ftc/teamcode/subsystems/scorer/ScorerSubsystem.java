@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems.scorer;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.Command;
+import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -17,6 +18,8 @@ public class ScorerSubsystem extends SubsystemBase implements LoggerSubsystem {
     private final MultipleTelemetry telemetry;
     private final DataLogger dataLogger;
 
+    private RobotConstants.ScorerConstants.ScorerState state;
+
     public ScorerSubsystem(HardwareMap hardwareMap, MultipleTelemetry telemetry, DataLogger dataLogger) {
         dataLogger.addData(DataLogger.DataType.INFO, "Initializing ScorerSubsystem.");
 
@@ -26,7 +29,16 @@ public class ScorerSubsystem extends SubsystemBase implements LoggerSubsystem {
     }
 
     private void setState(RobotConstants.ScorerConstants.ScorerState state) {
+        this.state = state;
         this.servo.turnToAngle(state.getDeg());
+    }
+
+    public Command toggleState() {
+        return new ConditionalCommand(
+                this.moveToState(RobotConstants.ScorerConstants.ScorerState.TAKE),
+                this.moveToState(RobotConstants.ScorerConstants.ScorerState.SCORE),
+                () -> this.state == RobotConstants.ScorerConstants.ScorerState.SCORE
+        );
     }
 
     @Override

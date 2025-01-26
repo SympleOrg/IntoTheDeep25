@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems.claw;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.Command;
+import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -53,5 +54,13 @@ public class ClawSubsystem extends SubsystemBase implements LoggerSubsystem {
 
     public Command moveToState(RobotConstants.ClawConstants.ClawState state) {
         return new InstantCommand(() -> this.setState(state), this);
+    }
+
+    public Command toggleState() {
+        return new ConditionalCommand(
+                this.moveToState(RobotConstants.ClawConstants.ClawState.OPEN),
+                this.moveToState(RobotConstants.ClawConstants.ClawState.CLOSE),
+                () -> this.state == RobotConstants.ClawConstants.ClawState.CLOSE
+        );
     }
 }

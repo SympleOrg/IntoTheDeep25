@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.subsystems.elevator;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.Command;
+import com.arcrobotics.ftclib.command.ConditionalCommand;
+import com.arcrobotics.ftclib.command.FunctionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.SubsystemBase;
@@ -55,12 +57,11 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggerSubsystem 
     }
 
     protected void setPower(double power) {
-        double finalPower = 0;
+        double finalPower = power;
         double pos = this.getCurrentPosition();
 
-        if(ElevatorConstants.MIN_HEIGHT < pos && pos < ElevatorConstants.MAX_HEIGHT) {
-            finalPower = power;
-        }
+        if(pos >= ElevatorConstants.MAX_HEIGHT && -power > 0) finalPower = 0;
+        if(pos <= ElevatorConstants.MIN_HEIGHT && -power < 0) finalPower = 0;
 
         this.motors.set(finalPower + ElevatorConstants.KG);
     }
@@ -103,6 +104,24 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggerSubsystem 
 
     public Command scoreOnChamber(ElevatorConstants.ElevatorState state) {
         return goToPosition(state.getMeters() + ElevatorConstants.SCORE_OFFSET);
+    }
+
+    public Command goToDefaultState() {
+        return new FunctionalCommand(
+                () -> {}, // init
+                () -> this.setPower(ElevatorConstants.RESET_POWER), // run
+                (i) -> this.setPower(0), // end
+                this.touchSensor::isPressed, // is finished
+                this
+        );
+    }
+
+    public Command toggleStates(ElevatorConstants.ElevatorState state1, ElevatorConstants.ElevatorState state2) {
+        return new ConditionalCommand(
+                this.goToState(state2),
+                this.goToState(state1),
+                () -> this.state == state1
+        );
     }
 
     public Command scoreOnChamber() {

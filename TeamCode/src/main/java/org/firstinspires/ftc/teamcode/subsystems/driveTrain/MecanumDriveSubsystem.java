@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.RobotConstants.DriveConstants;
 import org.firstinspires.ftc.teamcode.managers.RobotPositionManager;
 import org.firstinspires.ftc.teamcode.maps.MotorMap;
 import org.firstinspires.ftc.teamcode.util.DataLogger;
@@ -18,6 +19,7 @@ public class MecanumDriveSubsystem extends SubsystemBase implements IDriveTrainS
     private final DataLogger dataLogger;
 
     private final HashMap<MotorNames, MotorEx> motors = new HashMap<>();
+    private DriveConstants.DriveSpeed driveSpeed = DriveConstants.DriveSpeed.NORMAL;
 
     public MecanumDriveSubsystem(HardwareMap hardwareMap, MultipleTelemetry telemetry, DataLogger dataLogger) {
         this.telemetry = telemetry;
@@ -76,6 +78,14 @@ public class MecanumDriveSubsystem extends SubsystemBase implements IDriveTrainS
 
     public double getSideDistanceDriven() {
         return RobotPositionManager.getInstance().getBackWheelDistanceDriven();
+    }
+
+    public DriveConstants.DriveSpeed getDriveSpeed() {
+        return this.driveSpeed;
+    }
+
+    public void setDriveSpeed(DriveConstants.DriveSpeed driveSpeed) {
+        this.driveSpeed = driveSpeed;
     }
 
     @Override
