@@ -34,6 +34,7 @@ public class MecanumDriveSubsystem extends SubsystemBase implements IDriveTrainS
     private final DataLogger dataLogger;
     private final ThreeDeadWheelLocalizer localizer;
 
+    private DriveConstants.DriveSpeed driveSpeed = DriveConstants.DriveSpeed.NORMAL;
     private final MecanumChassisWheelsSet wheelsSet;
 
     private AutoPath autoPath;
@@ -130,6 +131,14 @@ public class MecanumDriveSubsystem extends SubsystemBase implements IDriveTrainS
 
     public double getSideDistanceDriven() {
         return RobotPositionManager.getInstance().getBackWheelDistanceDriven();
+    }
+
+    public DriveConstants.DriveSpeed getDriveSpeed() {
+        return this.driveSpeed;
+    }
+
+    public void setDriveSpeed(DriveConstants.DriveSpeed driveSpeed) {
+        this.driveSpeed = driveSpeed;
     }
 
     @Override

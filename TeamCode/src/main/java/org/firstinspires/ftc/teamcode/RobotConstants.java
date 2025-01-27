@@ -31,6 +31,21 @@ public class RobotConstants {
         public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(WHEELS_DISTANCE);
         public static final TrajectoryConfig TRAJECTORY_CONFIG = new TrajectoryConfig(MAX_VELOCITY, MAX_ACCELERATION);
 
+        public enum DriveSpeed {
+            NORMAL(1),
+            SLOW(0.65);
+
+            private final double maxSpeed;
+
+            DriveSpeed(double maxSpeed) {
+                this.maxSpeed = maxSpeed;
+            }
+
+            public double getMaxSpeed() {
+                return maxSpeed;
+            }
+        }
+
         public static class DeedWheels {
             public static final double WHEEL_RADIUS = 0.024;
             public static final double TICKS_PER_REV = 2000;
@@ -59,6 +74,23 @@ public class RobotConstants {
                 public static double Kz = 0.8;
             }
         }
+        public static final RevHubOrientationOnRobot.LogoFacingDirection LOGO_FACING_DIRECTION = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
+        public static final RevHubOrientationOnRobot.UsbFacingDirection USB_FACING_DIRECTION = RevHubOrientationOnRobot.UsbFacingDirection.UP;
+
+        public enum DriveSpeed {
+            NORMAL(1),
+            SLOW(0.65);
+
+            private final double maxSpeed;
+
+            DriveSpeed(double maxSpeed) {
+                this.maxSpeed = maxSpeed;
+            }
+
+            public double getMaxSpeed() {
+                return maxSpeed;
+            }
+        }
     }
 
     @Config
@@ -68,6 +100,8 @@ public class RobotConstants {
         public static double P = 15;
         public static double I = 0;
         public static double D = 0;
+
+        public static double RESET_POWER = -1;
 
         public static double MAX_HEIGHT = 0.94;
         public static double MIN_HEIGHT = -0.05;
@@ -81,8 +115,8 @@ public class RobotConstants {
         public static final double METERS_PER_TICK = (METERS_PER_REV / (MotorMap.ELEVATOR_LEFT.getTicksPerRev() * GEAR_RATIO));
 
         public enum ElevatorState {
-            BASKET_TOP(0),
-            BASKET_BOTTOM(0),
+            BASKET_TOP(0.76),
+            BASKET_BOTTOM(0.32),
             HUMAN_PLAYER(0),
             SCORE_TOP(0.45),
             SCORE_BOTTOM(0.15),
@@ -103,6 +137,10 @@ public class RobotConstants {
 
     @Config
     public static class ExtenderConstants {
+        public static double Kp = 10;
+        public static double Ki = 0;
+        public static double Kd = 0;
+
         public static final double MIN_POS = 0;
         public static final double MAX_POS = 0.215;
 
@@ -114,8 +152,8 @@ public class RobotConstants {
     public static class ClawConstants {
 
         public enum ClawState {
-            OPEN(110),
-            CLOSE(165);
+            OPEN(120),
+            CLOSE(170);
             private final double deg;
 
             ClawState(double deg) {
@@ -149,7 +187,7 @@ public class RobotConstants {
 
     public static class ScorerConstants {
         public enum ScorerState {
-            SCORE(0),
+            SCORE(65),
             TAKE(0);
 
             private final double deg;
@@ -169,7 +207,7 @@ public class RobotConstants {
             TAKE(36),
             PRETAKE(65),
             HUMAN_PLAYER(110),
-            CLOSED(300);
+            CLOSED(250);
 
             private final double deg;
 

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems.driveTrain.commands.mecanumDri
 
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.geometry.Vector2d;
 
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.MecanumDriveSubsystem;
@@ -26,8 +27,9 @@ public class MecanumArcadeDriveCommand extends CommandBase {
         double hSpeed = -this.gamepad.getLeftX();
         double rotationSpeed = -this.gamepad.getRightX();
 
-        Vector2d vector = new Vector2d(hSpeed, vSpeed);
-        vector = vector.rotateBy(-this.subsystem.getHeading());
+        Vector2d vector = new Vector2d(hSpeed, vSpeed)
+                .rotateBy(-this.subsystem.getHeading())
+                .times(this.subsystem.getDriveSpeed().getMaxSpeed());
 
         MecanumChassisUtils.MecanumWheelSpeeds mecanumWheelSpeeds = MecanumChassisUtils.chassisSpeedToWheelSpeeds(vector, rotationSpeed);
 

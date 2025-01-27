@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems.intakejoint;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.Command;
+import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -49,5 +50,13 @@ public class IntakeJointSubsystem extends SubsystemBase implements LoggerSubsyst
 
     public Command moveToState(RobotConstants.IntakeJointConstants.JointState state) {
         return new InstantCommand(() -> this.setState(state), this);
+    }
+
+    public Command toggleStates(RobotConstants.IntakeJointConstants.JointState state1, RobotConstants.IntakeJointConstants.JointState state2) {
+        return new ConditionalCommand(
+                this.moveToState(state2),
+                this.moveToState(state1),
+                () -> this.state == state1
+        );
     }
 }
