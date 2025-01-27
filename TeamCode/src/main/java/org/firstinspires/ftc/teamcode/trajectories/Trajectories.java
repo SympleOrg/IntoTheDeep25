@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode.trajectories;
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
 
+import org.firstinspires.ftc.teamcode.RobotConstants.DriveConstants;
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.AutoableDriveTrain;
-import org.firstinspires.ftc.teamcode.subsystems.driveTrain.DriveConstants;
 
 public class Trajectories {
     public static AutoPath getPath(Paths paths, AutoableDriveTrain driveTrain, Pose2d startingPose) {

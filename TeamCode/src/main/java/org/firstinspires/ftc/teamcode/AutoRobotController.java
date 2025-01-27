@@ -8,6 +8,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.commands.mecanumDrive.StrafeInAngleMecanumCommand;
 import org.firstinspires.ftc.teamcode.subsystems.intakejoint.IntakeJointSubsystem;
+import org.firstinspires.ftc.teamcode.trajectories.AutoPath;
+import org.firstinspires.ftc.teamcode.trajectories.Trajectories;
 import org.firstinspires.ftc.teamcode.util.opModes.SympleCommandOpMode;
 
 public class AutoRobotController extends RobotControllerBase {
@@ -19,12 +21,10 @@ public class AutoRobotController extends RobotControllerBase {
     public AutoRobotController(HardwareMap hMap, Telemetry telemetry, Gamepad driverController, Gamepad actionController, String logFilePrefix, boolean logData, Pose2d startingPose, Trajectories.Paths path) {
         super(hMap, telemetry, driverController, actionController, logFilePrefix, logData);
 
-        this.mecanumDriveSubsystem = new MecanumDriveSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
+        this.mecanumDriveSubsystem = new MecanumDriveSubsystem(this.getHardwareMap(), startingPose, this.getTelemetry(), this.getDataLogger());
         this.intakeJointSubsystem = new IntakeJointSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
         this.startingPose = startingPose;
         this.path = path;
-
-        this.mecanumDriveSubsystem = new MecanumDriveSubsystem(this.getHardwareMap(), startingPose, this.getTelemetry(), this.getDataLogger());
     }
 
     @Override
@@ -34,7 +34,7 @@ public class AutoRobotController extends RobotControllerBase {
 
     @Override
     public void initialize() {
-        this.mecanumDriveSubsystem.setPose(new Pose2d()); // starting pose
+
     }
 
     @Override

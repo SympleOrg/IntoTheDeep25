@@ -5,7 +5,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.geometry.Vector2d;
 
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.MecanumDriveSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.driveTrain.MecanumDriveSubsystem.MecanumChassisWheelsSet.MotorNames;
+import org.firstinspires.ftc.teamcode.subsystems.driveTrain.MecanumDriveSubsystem.MecanumChassisWheelsSet;
 import org.firstinspires.ftc.teamcode.util.MecanumChassisUtils;
 
 public class MecanumArcadeDriveCommand extends CommandBase {
@@ -36,10 +36,10 @@ public class MecanumArcadeDriveCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        this.subsystem.moveMotor(MecanumDriveSubsystem.MotorNames.FRONT_RIGHT, 0);
-        this.subsystem.moveMotor(MecanumDriveSubsystem.MotorNames.BACK_RIGHT, 0);
-        this.subsystem.moveMotor(MecanumDriveSubsystem.MotorNames.FRONT_LEFT, 0);
-        this.subsystem.moveMotor(MecanumDriveSubsystem.MotorNames.BACK_LEFT, 0);
+        this.subsystem.moveMotor(MecanumChassisWheelsSet.MotorNames.FRONT_RIGHT, 0);
+        this.subsystem.moveMotor(MecanumChassisWheelsSet.MotorNames.BACK_RIGHT, 0);
+        this.subsystem.moveMotor(MecanumChassisWheelsSet.MotorNames.FRONT_LEFT, 0);
+        this.subsystem.moveMotor(MecanumChassisWheelsSet.MotorNames.BACK_LEFT, 0);
         super.end(interrupted);
     }
 }
