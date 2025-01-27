@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -23,7 +24,7 @@ public class TeleOpRobotController extends RobotControllerBase {
             throw exception;
         }
 
-        this.mecanumDriveSubsystem = new MecanumDriveSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
+        this.mecanumDriveSubsystem = new MecanumDriveSubsystem(this.getHardwareMap(), new Pose2d(), this.getTelemetry(), this.getDataLogger());
     }
 
     @Override

@@ -5,6 +5,8 @@ import com.arcrobotics.ftclib.command.RamseteCommand;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.controller.wpilibcontroller.RamseteController;
 import com.arcrobotics.ftclib.controller.wpilibcontroller.SimpleMotorFeedforward;
+import com.arcrobotics.ftclib.geometry.Pose2d;
+import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.arcrobotics.ftclib.trajectory.Trajectory;
 
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.AutoableDriveTrain;
@@ -16,8 +18,9 @@ public class FollowTrajectoryCommand extends RamseteCommand {
     public FollowTrajectoryCommand(AutoableDriveTrain subsystem, Trajectory trajectory) {
         super(
                 trajectory,
-                subsystem::getPosition,
-                new RamseteController(2.0, 0.8),
+//                subsystem::getPosition,
+                () -> new Pose2d(subsystem.getPosition().getTranslation(), subsystem.getPosition().getRotation().rotateBy(Rotation2d.fromDegrees(180))),
+                new RamseteController(DriveConstants.RamsetController.RamsetTurning.Kb, DriveConstants.RamsetController.RamsetTurning.Kz),
                 new SimpleMotorFeedforward(
                         DriveConstants.RamsetController.Feedforward.Ks,
                         DriveConstants.RamsetController.Feedforward.Kv,
@@ -36,6 +39,7 @@ public class FollowTrajectoryCommand extends RamseteCommand {
                         DriveConstants.RamsetController.PID.Kd
                 ),
                 subsystem::moveSideMotors
+//                (left, right) -> subsystem.moveSideMotors(right, left)
         );
 
         addRequirements(subsystem);

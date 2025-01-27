@@ -1,17 +1,21 @@
 package org.firstinspires.ftc.teamcode.trajectories;
 
+import android.util.Pair;
+
 import com.acmerobotics.dashboard.canvas.Canvas;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.Subsystem;
 import com.arcrobotics.ftclib.geometry.Pose2d;
+import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.arcrobotics.ftclib.trajectory.Trajectory;
 import com.arcrobotics.ftclib.trajectory.TrajectoryConfig;
 import com.arcrobotics.ftclib.trajectory.TrajectoryGenerator;
 
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.AutoableDriveTrain;
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.commands.FollowTrajectoryCommand;
+import org.firstinspires.ftc.teamcode.subsystems.driveTrain.commands.RotateRobotByDegCommand;
 import org.firstinspires.ftc.teamcode.util.MathUtil;
 
 import java.util.ArrayList;
@@ -73,10 +77,17 @@ public class AutoPath {
         private final AutoableDriveTrain driveTrain;
         private final TrajectoryConfig trajectoryConfig;
 
+        private Pose2d startingPos = null;
+
         public Builder(AutoableDriveTrain driveTrain, TrajectoryConfig trajectoryConfig) {
             this.actions = new ArrayList<>();
             this.driveTrain = driveTrain;
             this.trajectoryConfig = trajectoryConfig;
+        }
+
+        public Builder setStartingPos(Pose2d pose2d) {
+            this.startingPos = pose2d;
+            return this;
         }
 
         public Builder doAction(Command action) {

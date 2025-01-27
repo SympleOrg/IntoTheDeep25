@@ -28,6 +28,7 @@ import org.firstinspires.ftc.teamcode.util.MathUtil;
 import org.firstinspires.ftc.teamcode.util.ThreeDeadWheelLocalizer;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class MecanumDriveSubsystem extends SubsystemBase implements IDriveTrainSubsystem, AutoableDriveTrain, LoggerSubsystem {
     private final MultipleTelemetry telemetry;
@@ -38,7 +39,7 @@ public class MecanumDriveSubsystem extends SubsystemBase implements IDriveTrainS
 
     private AutoPath autoPath;
 
-    public MecanumDriveSubsystem(HardwareMap hardwareMap, MultipleTelemetry telemetry, DataLogger dataLogger) {
+    public MecanumDriveSubsystem(HardwareMap hardwareMap, Pose2d startngPose, MultipleTelemetry telemetry, DataLogger dataLogger) {
         this.telemetry = telemetry;
         this.dataLogger = dataLogger;
 
@@ -59,7 +60,7 @@ public class MecanumDriveSubsystem extends SubsystemBase implements IDriveTrainS
             this.wheelsSet.getMotor(MecanumChassisWheelsSet.MotorNames.FRONT_LEFT),
             this.wheelsSet.getMotor(MecanumChassisWheelsSet.MotorNames.FRONT_RIGHT),
             this.wheelsSet.getMotor(MecanumChassisWheelsSet.MotorNames.BACK_LEFT),
-            new Pose2d(new Translation2d(0, 0), Rotation2d.fromDegrees(0)),
+            startngPose,
             DriveConstants.DeedWheels.WHEEL_RADIUS,
             DriveConstants.DeedWheels.TICKS_PER_REV,
             DriveConstants.DeedWheels.WHEELS_DISTANCE,
@@ -189,7 +190,12 @@ public class MecanumDriveSubsystem extends SubsystemBase implements IDriveTrainS
         }
 
         public void setPower(MotorNames motorName, double power) {
-            this.motors.get(motorName).set(power);
+
+            this.motors.get(motorName).set(
+                    motorName == MotorNames.BACK_LEFT
+                    ? power + Math.signum(power) * DriveConstants.MOTOR_POWER_FIX
+                    : power
+            );
         }
 
         public MotorEx getMotor(MotorNames motorName) {

@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.kinematics.wpilibkinematics.DifferentialDriveKinem
 import com.arcrobotics.ftclib.trajectory.TrajectoryConfig;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 
+@Config
 public class DriveConstants {
     public static final double WHEEL_RADIUS = 0.045;
     public static final double WHEELS_DISTANCE = 0.19;
@@ -14,6 +15,8 @@ public class DriveConstants {
     public static final double Ks = 0;
     public static final double MAX_VELOCITY = 0.75; // meter/sec
     public static final double MAX_ACCELERATION = 0.25; // meter/(sec^2)
+
+    public static final double MOTOR_POWER_FIX = 0.05;
 
     public static final RevHubOrientationOnRobot.LogoFacingDirection LOGO_FACING_DIRECTION = RevHubOrientationOnRobot.LogoFacingDirection.UP;
     public static final RevHubOrientationOnRobot.UsbFacingDirection USB_FACING_DIRECTION = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
@@ -32,15 +35,21 @@ public class DriveConstants {
         @Config
         public static class Feedforward {
             public static double Ks = 0;
-            public static double Kv = 0;
+            public static double Kv = 0.7;
             public static double Ka = 0;
         }
 
         @Config
         public static class PID {
-            public static double Kp = 0.15;
+            public static double Kp = 0;
             public static double Ki = 0;
             public static double Kd = 0;
+        }
+
+        @Config
+        public static class RamsetTurning {
+            public static double Kb = 0.5;
+            public static double Kz = 0.8;
         }
     }
 }
