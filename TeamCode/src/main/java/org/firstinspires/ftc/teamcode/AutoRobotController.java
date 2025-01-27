@@ -7,18 +7,20 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.commands.mecanumDrive.StrafeInAngleMecanumCommand;
-import org.firstinspires.ftc.teamcode.trajectories.AutoPath;
-import org.firstinspires.ftc.teamcode.trajectories.Trajectories;
+import org.firstinspires.ftc.teamcode.subsystems.intakejoint.IntakeJointSubsystem;
 import org.firstinspires.ftc.teamcode.util.opModes.SympleCommandOpMode;
 
 public class AutoRobotController extends RobotControllerBase {
     private final MecanumDriveSubsystem mecanumDriveSubsystem;
     private final Pose2d startingPose;
     private final Trajectories.Paths path;
+    private final IntakeJointSubsystem intakeJointSubsystem;
 
     public AutoRobotController(HardwareMap hMap, Telemetry telemetry, Gamepad driverController, Gamepad actionController, String logFilePrefix, boolean logData, Pose2d startingPose, Trajectories.Paths path) {
         super(hMap, telemetry, driverController, actionController, logFilePrefix, logData);
 
+        this.mecanumDriveSubsystem = new MecanumDriveSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
+        this.intakeJointSubsystem = new IntakeJointSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
         this.startingPose = startingPose;
         this.path = path;
 

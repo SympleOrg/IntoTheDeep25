@@ -16,7 +16,8 @@ import top.symple.symplegraphdisplay.GraphSettings;
 import top.symple.symplegraphdisplay.SympleGraphDisplay;
 
 public abstract class RobotControllerBase {
-    private static final GraphSettings DEFAULT_SYMPLE_GRAPH_DISPLAY_SETTINGS = new GraphSettings();
+    private static final GraphSettings DEFAULT_SYMPLE_GRAPH_DISPLAY_SETTINGS = new GraphSettings()
+            .setUpdateInterval(0.05);
 
     public final GamepadEx driverController;
     public final GamepadEx actionController;

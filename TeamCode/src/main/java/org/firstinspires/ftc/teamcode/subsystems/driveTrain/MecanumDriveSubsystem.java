@@ -12,6 +12,7 @@ import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.arcrobotics.ftclib.geometry.Transform2d;
 import com.arcrobotics.ftclib.geometry.Translation2d;
 import com.arcrobotics.ftclib.geometry.Vector2d;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.DifferentialDriveWheelSpeeds;
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveWheelSpeeds;
@@ -23,6 +24,8 @@ import org.firstinspires.ftc.teamcode.maps.MotorMap;
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.commands.FollowTrajectoryCommand;
 import org.firstinspires.ftc.teamcode.trajectories.AutoPath;
 import org.firstinspires.ftc.teamcode.util.DataLogger;
+import org.firstinspires.ftc.teamcode.util.MecanumChassisUtils;
+
 import org.firstinspires.ftc.teamcode.util.LoggerSubsystem;
 import org.firstinspires.ftc.teamcode.util.MathUtil;
 import org.firstinspires.ftc.teamcode.util.ThreeDeadWheelLocalizer;
@@ -54,6 +57,12 @@ public class MecanumDriveSubsystem extends SubsystemBase implements IDriveTrainS
         this.getDataLogger().addData(DataLogger.DataType.INFO, this.getClass().getSimpleName() + ": Inverting motors");
         this.wheelsSet.setInverted(MecanumChassisWheelsSet.MotorNames.FRONT_RIGHT, true);
         this.wheelsSet.setInverted(MecanumChassisWheelsSet.MotorNames.BACK_RIGHT, true);
+
+        this.motors.get(MotorNames.FRONT_LEFT).setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        this.motors.get(MotorNames.FRONT_RIGHT).setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        this.motors.get(MotorNames.BACK_LEFT).setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        this.motors.get(MotorNames.BACK_RIGHT).setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+    }
 
         this.getDataLogger().addData(DataLogger.DataType.INFO, this.getClass().getSimpleName() + ": Creating localizer");
         this.localizer = new ThreeDeadWheelLocalizer(
@@ -108,6 +117,18 @@ public class MecanumDriveSubsystem extends SubsystemBase implements IDriveTrainS
 
     public void moveMotor(MecanumChassisWheelsSet.MotorNames motor, double power) {
         this.wheelsSet.setPower(motor, power);
+    }
+
+    public void moveMotors(MecanumChassisUtils.MecanumWheelSpeeds mecanumWheelSpeeds) {
+        this.moveMotor(MecanumDriveSubsystem.MotorNames.FRONT_LEFT, mecanumWheelSpeeds.getFrontLeft());
+        this.moveMotor(MecanumDriveSubsystem.MotorNames.FRONT_RIGHT, mecanumWheelSpeeds.getFrontRight());
+        this.moveMotor(MecanumDriveSubsystem.MotorNames.BACK_LEFT, mecanumWheelSpeeds.getBackLeft());
+        this.moveMotor(MecanumDriveSubsystem.MotorNames.BACK_RIGHT, mecanumWheelSpeeds.getBackRight());
+    }
+
+    @Override
+    public void periodic() {
+        getTelemetry().addData("angle", this.getHeading());
     }
 
     @Override
@@ -221,13 +242,6 @@ public class MecanumDriveSubsystem extends SubsystemBase implements IDriveTrainS
                             DriveConstants.WHEEL_RADIUS, MotorMap.LEG_BACK_RIGHT.getTicksPerRev()
                     )
             );
-        }
-
-        public enum MotorNames {
-            FRONT_RIGHT,
-            FRONT_LEFT,
-            BACK_LEFT,
-            BACK_RIGHT
         }
     }
 }
