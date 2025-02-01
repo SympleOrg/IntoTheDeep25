@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.controller.PController;
+import com.arcrobotics.ftclib.controller.PIDController;
 
 import org.firstinspires.ftc.teamcode.RobotConstants;
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.IDriveTrainSubsystem;
@@ -11,10 +12,12 @@ import org.firstinspires.ftc.teamcode.util.DataLogger;
 
 @Config
 public class DriveDistanceDriveCommand extends CommandBase {
-    public static final double Kp = 0.65;
-    private static final double MAX_POWER = 0.8;
+    public static double Kp = 2;
+    public static double Ki = 0.8;
+    public static double Kd = 0.25;
+    public static double MAX_POWER = 0.75;
 
-    private final PController pController;
+    private final PIDController pController;
     private final double finalPos;
 
     private double STARTING_POS;
@@ -27,8 +30,8 @@ public class DriveDistanceDriveCommand extends CommandBase {
 
         this.finalPos = meters;
 
-        this.pController = new PController(Kp);
-        this.pController.setTolerance(0.05);
+        this.pController = new PController(Kp, Ki, Kd);
+        this.pController.setTolerance(0.02);
     }
 
     @Override
@@ -58,7 +61,7 @@ public class DriveDistanceDriveCommand extends CommandBase {
         telemetry.addData("motor encoder", this.subsystem.getForwardDistanceDriven());
         telemetry.update();
 
-        this.subsystem.moveSideMotors(power, power);
+        this.subsystem.moveSideMotors(-power, -power);
     }
 
     @Override

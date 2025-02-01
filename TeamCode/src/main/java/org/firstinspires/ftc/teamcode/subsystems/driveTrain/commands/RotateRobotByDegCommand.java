@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems.driveTrain.commands;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.controller.PController;
@@ -7,8 +8,9 @@ import com.arcrobotics.ftclib.controller.PController;
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.IDriveTrainSubsystem;
 import org.firstinspires.ftc.teamcode.util.DataLogger;
 
+@Config
 public class RotateRobotByDegCommand extends CommandBase {
-    public static final double DEFAULT_KP = 0.05;
+    public static double DEFAULT_KP = 0.03;
     private static final double MAX_POWER = 0.8;
 
     private final PController pController;
