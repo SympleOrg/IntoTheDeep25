@@ -113,18 +113,17 @@ public class RobotConstants {
     public static class IntakeConstants {
 
         public enum IntakeState {
-            TAKE(1),
-            DROP(-1),
-            IDLE(0);
+            OPEN(0),
+            CLOSE(0);
 
-            private final double power;
+            private final double deg;
 
-            IntakeState(double power) {
-                this.power = power;
+            IntakeState(double deg) {
+                this.deg = deg;
             }
 
-            public double getPower() {
-                return power;
+            public double getDeg() {
+                return deg;
             }
         }
     }
@@ -147,7 +146,7 @@ public class RobotConstants {
     }
 
     public static class IntakeJointConstants {
-        public enum JointState {
+        public enum JointXState {
             TAKE(36),
             PRETAKE(65),
             HUMAN_PLAYER(110),
@@ -155,7 +154,21 @@ public class RobotConstants {
 
             private final double deg;
 
-            JointState(double deg) {
+            JointXState(double deg) {
+                this.deg = deg;
+            }
+
+            public double getDeg() {
+                return deg;
+            }
+        }
+
+        public enum JointYState {
+            REST(0),
+            BASKET(0);
+            private final double deg;
+
+            JointYState(double deg) {
                 this.deg = deg;
             }
 

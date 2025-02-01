@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.util.controlcommands;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
-import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.RobotConstants.*;
 import org.firstinspires.ftc.teamcode.subsystems.claw.ClawSubsystem;
@@ -11,7 +10,8 @@ import org.firstinspires.ftc.teamcode.subsystems.driveTrain.MecanumDriveSubsyste
 import org.firstinspires.ftc.teamcode.subsystems.elevator.ElevatorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.extender.ExtenderSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.intakejoint.IntakeJointSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.intakejoint.IntakeXJointSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.intakejoint.IntakeYJointSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.scorer.ScorerSubsystem;
 
 public class DriverCommands {
@@ -21,7 +21,8 @@ public class DriverCommands {
     private final IntakeSubsystem intakeSubsystem;
     private final ElevatorSubsystem elevatorSubsystem;
     private final ExtenderSubsystem extenderSubsystem;
-    private final IntakeJointSubsystem intakeJointSubsystem;
+    private final IntakeXJointSubsystem intakeXJointSubsystem;
+    private final IntakeYJointSubsystem intakeYJointSubsystem;
 
     public DriverCommands(
             MecanumDriveSubsystem mecanumDriveSubsystem,
@@ -30,7 +31,8 @@ public class DriverCommands {
             IntakeSubsystem intakeSubsystem,
             ElevatorSubsystem elevatorSubsystem,
             ExtenderSubsystem extenderSubsystem,
-            IntakeJointSubsystem intakeJointSubsystem
+            IntakeXJointSubsystem intakeXJointSubsystem,
+            IntakeYJointSubsystem intakeYJointSubsystem
     ) {
         this.mecanumDriveSubsystem = mecanumDriveSubsystem;
         this.scorerSubsystem = scorerSubsystem;
@@ -38,7 +40,8 @@ public class DriverCommands {
         this.intakeSubsystem = intakeSubsystem;
         this.elevatorSubsystem = elevatorSubsystem;
         this.extenderSubsystem = extenderSubsystem;
-        this.intakeJointSubsystem = intakeJointSubsystem;
+        this.intakeXJointSubsystem = intakeXJointSubsystem;
+        this.intakeYJointSubsystem = intakeYJointSubsystem;
     }
 
     public Command intakeToScorer() {
@@ -46,13 +49,14 @@ public class DriverCommands {
                 new ParallelCommandGroup(
                         this.elevatorSubsystem.goToState(ElevatorConstants.ElevatorState.REST),
                         this.scorerSubsystem.moveToState(ScorerConstants.ScorerState.TAKE),
-                        this.intakeJointSubsystem.moveToState(IntakeJointConstants.JointState.CLOSED),
+                        this.intakeXJointSubsystem.moveToState(IntakeJointConstants.JointXState.CLOSED),
                         this.extenderSubsystem.goToRest()
                 ).withTimeout(1000),
                 new SequentialCommandGroup(
-                        this.intakeSubsystem.setState(IntakeConstants.IntakeState.DROP)
-                                .withTimeout(1000),
-                        this.intakeJointSubsystem.moveToState(IntakeJointConstants.JointState.HUMAN_PLAYER)
+                        // TODO: fix this
+//                        this.intakeSubsystem.goToState(IntakeConstants.IntakeState.DROP)
+//                                .withTimeout(1000),
+                        this.intakeXJointSubsystem.moveToState(IntakeJointConstants.JointXState.HUMAN_PLAYER)
                 )
         );
     }

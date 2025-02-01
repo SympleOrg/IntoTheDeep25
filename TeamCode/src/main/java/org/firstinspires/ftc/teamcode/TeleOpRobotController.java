@@ -12,7 +12,8 @@ import org.firstinspires.ftc.teamcode.subsystems.driveTrain.commands.mecanumDriv
 import org.firstinspires.ftc.teamcode.subsystems.elevator.ElevatorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.extender.ExtenderSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.intakejoint.IntakeJointSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.intakejoint.IntakeXJointSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.intakejoint.IntakeYJointSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.scorer.ScorerSubsystem;
 import org.firstinspires.ftc.teamcode.util.controlcommands.ActuatorCommands;
 import org.firstinspires.ftc.teamcode.util.controlcommands.DriverCommands;
@@ -27,7 +28,8 @@ public class TeleOpRobotController extends RobotControllerBase {
     private final IntakeSubsystem intakeSubsystem;
     private final ElevatorSubsystem elevatorSubsystem;
     private final ExtenderSubsystem extenderSubsystem;
-    private final IntakeJointSubsystem intakeJointSubsystem;
+    private final IntakeXJointSubsystem intakeXJointSubsystem;
+    private final IntakeYJointSubsystem intakeYJointSubsystem;
 
     private final DriverCommands driverCommands;
     private final ActuatorCommands actuatorCommands;
@@ -47,7 +49,8 @@ public class TeleOpRobotController extends RobotControllerBase {
         this.intakeSubsystem = new IntakeSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
         this.elevatorSubsystem = new ElevatorSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
         this.extenderSubsystem = new ExtenderSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
-        this.intakeJointSubsystem = new IntakeJointSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
+        this.intakeXJointSubsystem = new IntakeXJointSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
+        this.intakeYJointSubsystem = new IntakeYJointSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
 
         this.driverCommands = new DriverCommands(
                 mecanumDriveSubsystem,
@@ -56,7 +59,8 @@ public class TeleOpRobotController extends RobotControllerBase {
                 intakeSubsystem,
                 elevatorSubsystem,
                 extenderSubsystem,
-                intakeJointSubsystem
+                intakeXJointSubsystem,
+                intakeYJointSubsystem
         );
 
         this.actuatorCommands = new ActuatorCommands(
@@ -66,7 +70,8 @@ public class TeleOpRobotController extends RobotControllerBase {
                 intakeSubsystem,
                 elevatorSubsystem,
                 extenderSubsystem,
-                intakeJointSubsystem
+                intakeXJointSubsystem,
+                intakeYJointSubsystem
         );
     }
 
@@ -131,7 +136,7 @@ public class TeleOpRobotController extends RobotControllerBase {
 
     @Override
     public void postInitialize() {
-        this.intakeJointSubsystem.moveToState(RobotConstants.IntakeJointConstants.JointState.CLOSED).schedule();
+        this.intakeXJointSubsystem.moveToState(IntakeJointConstants.JointXState.CLOSED).schedule();
     }
 
     @Override

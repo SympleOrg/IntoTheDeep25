@@ -7,34 +7,34 @@ import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.RobotConstants;
+import org.firstinspires.ftc.teamcode.RobotConstants.IntakeJointConstants;
 import org.firstinspires.ftc.teamcode.maps.ServoMap;
 import org.firstinspires.ftc.teamcode.util.DataLogger;
 import org.firstinspires.ftc.teamcode.util.LoggerSubsystem;
 import org.firstinspires.ftc.teamcode.util.SympleServo;
 
-public class IntakeJointSubsystem extends SubsystemBase implements LoggerSubsystem {
+public class IntakeYJointSubsystem extends SubsystemBase implements LoggerSubsystem {
     private final SympleServo servo;
     private final MultipleTelemetry telemetry;
     private final DataLogger dataLogger;
 
-    private RobotConstants.IntakeJointConstants.JointState state;
+    private IntakeJointConstants.JointYState state;
 
-    public IntakeJointSubsystem(HardwareMap hardwareMap, MultipleTelemetry telemetry, DataLogger dataLogger) {
-        dataLogger.addData(DataLogger.DataType.INFO, "Initializing ClawSubsystem.");
+    public IntakeYJointSubsystem(HardwareMap hardwareMap, MultipleTelemetry telemetry, DataLogger dataLogger) {
+        dataLogger.addData(DataLogger.DataType.INFO, "Initializing IntakeYJointSubsystem.");
 
         this.telemetry = telemetry;
         this.dataLogger = dataLogger;
 
-        this.servo = new SympleServo(hardwareMap, ServoMap.INTAKE_JOINT.getId(), 0, 300);
+        this.servo = new SympleServo(hardwareMap, ServoMap.INTAKE_Y_JOINT.getId(), 0, 300);
     }
 
-    private void setState(RobotConstants.IntakeJointConstants.JointState state) {
+    private void setState(IntakeJointConstants.JointYState state) {
         this.state = state;
         this.servo.turnToAngle(state.getDeg());
     }
 
-    public RobotConstants.IntakeJointConstants.JointState getState() {
+    public IntakeJointConstants.JointYState getState() {
         return state;
     }
 
@@ -48,11 +48,11 @@ public class IntakeJointSubsystem extends SubsystemBase implements LoggerSubsyst
         return telemetry;
     }
 
-    public Command moveToState(RobotConstants.IntakeJointConstants.JointState state) {
+    public Command moveToState(IntakeJointConstants.JointYState state) {
         return new InstantCommand(() -> this.setState(state), this);
     }
 
-    public Command toggleStates(RobotConstants.IntakeJointConstants.JointState state1, RobotConstants.IntakeJointConstants.JointState state2) {
+    public Command toggleStates(IntakeJointConstants.JointYState state1, IntakeJointConstants.JointYState state2) {
         return new ConditionalCommand(
                 this.moveToState(state2),
                 this.moveToState(state1),

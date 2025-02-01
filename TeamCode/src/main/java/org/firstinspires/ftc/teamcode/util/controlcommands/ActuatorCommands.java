@@ -15,7 +15,8 @@ import org.firstinspires.ftc.teamcode.subsystems.driveTrain.MecanumDriveSubsyste
 import org.firstinspires.ftc.teamcode.subsystems.elevator.ElevatorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.extender.ExtenderSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.intakejoint.IntakeJointSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.intakejoint.IntakeXJointSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.intakejoint.IntakeYJointSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.scorer.ScorerSubsystem;
 
 import java.util.HashMap;
@@ -27,7 +28,8 @@ public class ActuatorCommands {
     private final IntakeSubsystem intakeSubsystem;
     private final ElevatorSubsystem elevatorSubsystem;
     private final ExtenderSubsystem extenderSubsystem;
-    private final IntakeJointSubsystem intakeJointSubsystem;
+    private final IntakeXJointSubsystem intakeXJointSubsystem;
+    private final IntakeYJointSubsystem intakeYJointSubsystem;
 
     public ActuatorCommands(
             MecanumDriveSubsystem mecanumDriveSubsystem,
@@ -36,7 +38,8 @@ public class ActuatorCommands {
             IntakeSubsystem intakeSubsystem,
             ElevatorSubsystem elevatorSubsystem,
             ExtenderSubsystem extenderSubsystem,
-            IntakeJointSubsystem intakeJointSubsystem
+            IntakeXJointSubsystem intakeXJointSubsystem,
+            IntakeYJointSubsystem intakeYJointSubsystem
     ) {
         this.mecanumDriveSubsystem = mecanumDriveSubsystem;
         this.scorerSubsystem = scorerSubsystem;
@@ -44,33 +47,40 @@ public class ActuatorCommands {
         this.intakeSubsystem = intakeSubsystem;
         this.elevatorSubsystem = elevatorSubsystem;
         this.extenderSubsystem = extenderSubsystem;
-        this.intakeJointSubsystem = intakeJointSubsystem;
+        this.intakeXJointSubsystem = intakeXJointSubsystem;
+        this.intakeYJointSubsystem = intakeYJointSubsystem;
     }
 
     public Command takeGamePiece() {
-        return new ParallelCommandGroup(
-                this.intakeSubsystem.setState(RobotConstants.IntakeConstants.IntakeState.TAKE),
-                new ConditionalCommand(
-                        this.intakeJointSubsystem.moveToState(RobotConstants.IntakeJointConstants.JointState.TAKE),
-                        new InstantCommand(),
-                        () -> this.intakeJointSubsystem.getState() == RobotConstants.IntakeJointConstants.JointState.PRETAKE
-                )
-        );
+//        return new ParallelCommandGroup(
+//                this.intakeSubsystem.goToState(RobotConstants.IntakeConstants.IntakeState.TAKE),
+//                new ConditionalCommand(
+//                        this.intakeXJointSubsystem.moveToState(RobotConstants.IntakeJointConstants.JointXState.TAKE),
+//                        new InstantCommand(),
+//                        () -> this.intakeXJointSubsystem.getState() == RobotConstants.IntakeJointConstants.JointXState.PRETAKE
+//                )
+//        );
+        // TODO: change this placeholder
+        return new InstantCommand();
     }
 
     public Command dropGamePiece() {
-        return this.intakeSubsystem.setState(RobotConstants.IntakeConstants.IntakeState.DROP);
+//        return this.intakeSubsystem.goToState(RobotConstants.IntakeConstants.IntakeState.DROP);
+        // TODO: change this placeholder
+        return new InstantCommand();
     }
 
     public Command stopIntake() {
-        return new ParallelCommandGroup(
-                this.intakeSubsystem.setState(RobotConstants.IntakeConstants.IntakeState.IDLE),
-                new ConditionalCommand(
-                        this.intakeJointSubsystem.moveToState(RobotConstants.IntakeJointConstants.JointState.PRETAKE),
-                        new InstantCommand(),
-                        () -> this.intakeJointSubsystem.getState() == RobotConstants.IntakeJointConstants.JointState.TAKE
-                )
-        );
+//        return new ParallelCommandGroup(
+//                this.intakeSubsystem.goToState(RobotConstants.IntakeConstants.IntakeState.IDLE),
+//                new ConditionalCommand(
+//                        this.intakeXJointSubsystem.moveToState(RobotConstants.IntakeJointConstants.JointXState.PRETAKE),
+//                        new InstantCommand(),
+//                        () -> this.intakeXJointSubsystem.getState() == RobotConstants.IntakeJointConstants.JointXState.TAKE
+//                )
+//        );
+        // TODO: change this placeholder
+        return new InstantCommand();
     }
 
     public Command toggleChamberElevator() {
@@ -115,13 +125,13 @@ public class ActuatorCommands {
     }
 
     public Command moveJointToHumanPlayer() {
-        return this.intakeJointSubsystem.moveToState(RobotConstants.IntakeJointConstants.JointState.HUMAN_PLAYER);
+        return this.intakeXJointSubsystem.moveToState(RobotConstants.IntakeJointConstants.JointXState.HUMAN_PLAYER);
     }
 
     public Command togglePretake() {
-        return this.intakeJointSubsystem.toggleStates(
-                RobotConstants.IntakeJointConstants.JointState.PRETAKE,
-                RobotConstants.IntakeJointConstants.JointState.CLOSED
+        return this.intakeXJointSubsystem.toggleStates(
+                RobotConstants.IntakeJointConstants.JointXState.PRETAKE,
+                RobotConstants.IntakeJointConstants.JointXState.CLOSED
         );
     }
 

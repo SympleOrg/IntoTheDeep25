@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.util.SympleServo;
 @Config
 @TeleOp(name = "Servo Tuner", group = "tune")
 public class ServoTunerOpMode extends CommandOpMode {
-    private final ServoMap servoName = ServoMap.INTAKE_JOINT;
+    private final ServoMap servoName = ServoMap.INTAKE_X_JOINT;
     public static double angle = 0;
 
     private GamepadEx gamepadEx;
