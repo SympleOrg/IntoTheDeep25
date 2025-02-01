@@ -28,7 +28,7 @@ public class MecanumArcadeDriveCommand extends CommandBase {
         double rotationSpeed = -this.gamepad.getRightX();
 
         Vector2d vector = new Vector2d(hSpeed, vSpeed)
-                .rotateBy(-this.subsystem.getHeading())
+                .rotateBy(-this.subsystem.getPosition().getRotation().getDegrees())
                 .times(this.subsystem.getDriveSpeed().getMaxSpeed());
 
         MecanumChassisUtils.MecanumWheelSpeeds mecanumWheelSpeeds = MecanumChassisUtils.chassisSpeedToWheelSpeeds(vector, rotationSpeed);

@@ -34,7 +34,7 @@ public class Trajectories {
                 .setStartingPos(startingPose)
                 .followPath(builder -> builder
                         .setNextPoint(new Pose2d(0, 0, Rotation2d.fromDegrees(0)))
-                        .setNextPoint(new Pose2d(-0.8, -0.35, Rotation2d.fromDegrees(0)))
+                        .setNextPoint(new Pose2d(1, 1, Rotation2d.fromDegrees(0)))
                 )
                 .build();
     }

@@ -85,7 +85,7 @@ public class ExtenderSubsystem extends SubsystemBase implements LoggerSubsystem,
 
     public Command moveWithJoyStick(GamepadEx gamepadEx) {
         return new RunCommand(() -> {
-            this.setPower(gamepadEx.getRightY());
+            this.setPower(gamepadEx.getRightY() * 0.750);
         }, this);
     }
 

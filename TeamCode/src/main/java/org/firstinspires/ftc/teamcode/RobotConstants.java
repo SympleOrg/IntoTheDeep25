@@ -26,7 +26,7 @@ public class RobotConstants {
         public static final double MAX_VELOCITY = 0.75; // meter/sec
         public static final double MAX_ACCELERATION = 0.25; // meter/(sec^2)
 
-        public static final double MOTOR_POWER_FIX = 0.05;
+        public static final double MOTOR_POWER_FIX = 0.085;
 
         public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(WHEELS_DISTANCE);
         public static final TrajectoryConfig TRAJECTORY_CONFIG = new TrajectoryConfig(MAX_VELOCITY, MAX_ACCELERATION);
@@ -74,23 +74,6 @@ public class RobotConstants {
                 public static double Kz = 0.8;
             }
         }
-        public static final RevHubOrientationOnRobot.LogoFacingDirection LOGO_FACING_DIRECTION = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
-        public static final RevHubOrientationOnRobot.UsbFacingDirection USB_FACING_DIRECTION = RevHubOrientationOnRobot.UsbFacingDirection.UP;
-
-        public enum DriveSpeed {
-            NORMAL(1),
-            SLOW(0.65);
-
-            private final double maxSpeed;
-
-            DriveSpeed(double maxSpeed) {
-                this.maxSpeed = maxSpeed;
-            }
-
-            public double getMaxSpeed() {
-                return maxSpeed;
-            }
-        }
     }
 
     @Config
@@ -115,7 +98,7 @@ public class RobotConstants {
         public static final double METERS_PER_TICK = (METERS_PER_REV / (MotorMap.ELEVATOR_LEFT.getTicksPerRev() * GEAR_RATIO));
 
         public enum ElevatorState {
-            BASKET_TOP(0.76),
+            BASKET_TOP(0.86),
             BASKET_BOTTOM(0.32),
             HUMAN_PLAYER(0),
             SCORE_TOP(0.45),
@@ -170,8 +153,10 @@ public class RobotConstants {
 
         public enum IntakeState {
             TAKE(1),
-            DROP(-1),
-            IDLE(0);
+            DROP(-0.35
+            ),
+            IDLE(0),
+            BASKET(-0.3);
 
             private final double power;
 
@@ -187,8 +172,8 @@ public class RobotConstants {
 
     public static class ScorerConstants {
         public enum ScorerState {
-            SCORE(65),
-            TAKE(0);
+            SCORE(106),
+            TAKE(30);
 
             private final double deg;
 
@@ -207,7 +192,7 @@ public class RobotConstants {
             TAKE(36),
             PRETAKE(65),
             HUMAN_PLAYER(110),
-            CLOSED(250);
+            CLOSED(260);
 
             private final double deg;
 

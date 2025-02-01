@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.subsystems.driveTrain.commands.mecanumDri
 
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.controller.PController;
+import com.arcrobotics.ftclib.geometry.Pose2d;
+import com.arcrobotics.ftclib.geometry.Transform2d;
 import com.arcrobotics.ftclib.geometry.Vector2d;
 
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.MecanumDriveSubsystem;
@@ -13,8 +15,7 @@ public class StrafeInAngleMecanumCommand extends CommandBase {
     private final double angle;
     private final double meters;
 
-    private double STARTING_FORWARD_DIST = 0;
-    private double STARTING_SIDE_DIST = 0;
+    private Pose2d STARTING_POSE;
     private PController pController;
 
     private final MecanumDriveSubsystem subsystem;
@@ -30,25 +31,22 @@ public class StrafeInAngleMecanumCommand extends CommandBase {
     @Override
     public void initialize() {
         super.initialize();
-        this.STARTING_FORWARD_DIST = this.subsystem.getForwardDistanceDriven();
-        this.STARTING_SIDE_DIST = this.subsystem.getSideDistanceDriven();
+        this.STARTING_POSE = this.subsystem.getPosition();
 
-        this.pController = new PController(0.8);
+        this.pController = new PController(1);
         this.pController.setTolerance(0.02);
         this.pController.setSetPoint(this.meters);
     }
 
     @Override
     public void execute() {
-        double hSpeed = Math.cos(Math.toRadians(angle)) * meters;
-        double vSpeed = Math.sin(Math.toRadians(angle)) * meters;
+        double hSpeed = Math.cos(Math.toRadians(angle));
+        double vSpeed = Math.sin(Math.toRadians(angle));
         Vector2d vector2d = new Vector2d(hSpeed, vSpeed);
 
-        double forwardDistanceMoved = this.subsystem.getForwardDistanceDriven() - this.STARTING_FORWARD_DIST;
-        double sideDistanceMoved = this.subsystem.getSideDistanceDriven() - this.STARTING_SIDE_DIST;
+        Transform2d distMoved = this.subsystem.getPosition().minus(this.STARTING_POSE);
 
-        double currentDist = Math.hypot(forwardDistanceMoved, sideDistanceMoved); // => sqrt(x*x + y*y)
-        double powerMultiplier = this.pController.calculate(currentDist);
+        double powerMultiplier = this.pController.calculate(distMoved.getTranslation().getNorm());
 
         MecanumChassisUtils.MecanumWheelSpeeds mecanumWheelSpeeds = MecanumChassisUtils.chassisSpeedToWheelSpeeds(vector2d, 0)
                 .mul(powerMultiplier);

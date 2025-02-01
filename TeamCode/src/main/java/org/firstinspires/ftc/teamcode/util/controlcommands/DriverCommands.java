@@ -49,11 +49,8 @@ public class DriverCommands {
                         this.intakeJointSubsystem.moveToState(IntakeJointConstants.JointState.CLOSED),
                         this.extenderSubsystem.goToRest()
                 ).withTimeout(1000),
-                new SequentialCommandGroup(
-                        this.intakeSubsystem.setState(IntakeConstants.IntakeState.DROP)
-                                .withTimeout(1000),
-                        this.intakeJointSubsystem.moveToState(IntakeJointConstants.JointState.HUMAN_PLAYER)
-                )
+                this.intakeSubsystem.setState(IntakeConstants.IntakeState.BASKET)
+                        .withTimeout(1000)
         );
     }
 

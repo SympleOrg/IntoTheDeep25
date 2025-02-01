@@ -1,15 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.geometry.Pose2d;
-import com.arcrobotics.ftclib.command.Command;
-import com.arcrobotics.ftclib.command.ConditionalCommand;
-import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.ParallelCommandGroup;
-import com.arcrobotics.ftclib.command.SelectCommand;
-import com.arcrobotics.ftclib.command.SequentialCommandGroup;
-import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.button.Trigger;
+import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -49,7 +44,7 @@ public class TeleOpRobotController extends RobotControllerBase {
             throw exception;
         }
 
-        this.mecanumDriveSubsystem = new MecanumDriveSubsystem(this.getHardwareMap(), new Pose2d(), this.getTelemetry(), this.getDataLogger());
+        this.mecanumDriveSubsystem = new MecanumDriveSubsystem(this.getHardwareMap(), new Pose2d(AutoRobotController.END_POSE.getX(), AutoRobotController.END_POSE.getY(), Rotation2d.fromDegrees(-AutoRobotController.END_POSE.getRotation().getDegrees())), this.getTelemetry(), this.getDataLogger());
         this.clawSubsystem = new ClawSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
         this.scorerSubsystem = new ScorerSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
         this.intakeSubsystem = new IntakeSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
@@ -139,12 +134,18 @@ public class TeleOpRobotController extends RobotControllerBase {
 
     @Override
     public void postInitialize() {
-        this.intakeJointSubsystem.moveToState(RobotConstants.IntakeJointConstants.JointState.CLOSED).schedule();
+        new ParallelCommandGroup(
+                this.scorerSubsystem.moveToState(ScorerConstants.ScorerState.TAKE),
+                this.intakeJointSubsystem.moveToState(IntakeJointConstants.JointState.CLOSED),
+                this.elevatorSubsystem.goToDefaultState(),
+                this.clawSubsystem.moveToState(ClawConstants.ClawState.CLOSE),
+                this.extenderSubsystem.goToRest()
+        ).withTimeout(3000).schedule();
     }
 
     @Override
     public void run() {
-
+        getTelemetry().addData("dweg", AutoRobotController.END_POSE);
     }
 
     @Override

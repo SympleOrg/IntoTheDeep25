@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.managers.RobotPositionManager;
 import org.firstinspires.ftc.teamcode.util.DataLogger;
 import org.firstinspires.ftc.teamcode.util.opModes.SympleCommandOpMode;
 
@@ -42,7 +41,6 @@ public abstract class RobotControllerBase {
         SympleGraphDisplay.getInstance().reset();
         SympleGraphDisplay.getInstance().setSetting(DEFAULT_SYMPLE_GRAPH_DISPLAY_SETTINGS);
         CommandScheduler.getInstance().reset();
-        RobotPositionManager.init(hardwareMap);
     }
 
     public abstract void createKeyBindings();

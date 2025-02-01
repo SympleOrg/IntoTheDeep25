@@ -15,7 +15,7 @@ public class ChamberAutoOpMode extends SympleCommandOpMode {
         this.robotController = new AutoRobotController.Builder()
                 .initializeDefaults(this)
                 .setPath(Trajectories.Paths.CHAMBER)
-                .setStartingPose(new Pose2d(0.38, -1.56, Rotation2d.fromDegrees(0)))
+                .setStartingPose(new Pose2d(0, 0, Rotation2d.fromDegrees(180)))
                 .build();
     }
 }

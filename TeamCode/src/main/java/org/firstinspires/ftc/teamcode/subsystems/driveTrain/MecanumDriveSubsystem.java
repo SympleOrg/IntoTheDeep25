@@ -15,7 +15,6 @@ import com.arcrobotics.ftclib.trajectory.Trajectory;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.RobotConstants.DriveConstants;
-import org.firstinspires.ftc.teamcode.managers.RobotPositionManager;
 import org.firstinspires.ftc.teamcode.maps.MotorMap;
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.commands.FollowTrajectoryCommand;
 import org.firstinspires.ftc.teamcode.trajectories.AutoPath;
@@ -124,15 +123,6 @@ public class MecanumDriveSubsystem extends SubsystemBase implements IDriveTrainS
         this.wheelsSet.setPower(MecanumChassisWheelsSet.MotorNames.BACK_RIGHT, right);
     }
 
-    @Override
-    public double getForwardDistanceDriven() {
-        return RobotPositionManager.getInstance().getRightWheelDistanceDriven();
-    }
-
-    public double getSideDistanceDriven() {
-        return RobotPositionManager.getInstance().getBackWheelDistanceDriven();
-    }
-
     public DriveConstants.DriveSpeed getDriveSpeed() {
         return this.driveSpeed;
     }
@@ -154,11 +144,6 @@ public class MecanumDriveSubsystem extends SubsystemBase implements IDriveTrainS
                 (speeds.frontLeftMetersPerSecond + speeds.rearLeftMetersPerSecond) / 2,
                 (speeds.frontRightMetersPerSecond + speeds.rearRightMetersPerSecond) / 2
         );
-    }
-
-    @Override
-    public double getHeading() {
-        return RobotPositionManager.getInstance().getHeadingByGyro();
     }
 
     public AutoPath setAutoPath(AutoPath autoPath) {
