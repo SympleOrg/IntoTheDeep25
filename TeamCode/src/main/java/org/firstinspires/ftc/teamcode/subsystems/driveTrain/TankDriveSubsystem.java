@@ -2,10 +2,13 @@ package org.firstinspires.ftc.teamcode.subsystems.driveTrain;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
+import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.managers.RobotPositionManager;
+import org.firstinspires.ftc.teamcode.maps.MotorMap;
 import org.firstinspires.ftc.teamcode.util.DataLogger;
 
 // THIS CODE IS OUTDATED AND DIDN'T GET TESTED ON THE NEW ROBOT!
@@ -15,15 +18,25 @@ public class TankDriveSubsystem extends SubsystemBase implements IDriveTrainSubs
 
     private boolean invert = false;
 
-    private final MotorEx leftMotor, rightMotor;
+    private final MotorGroup leftMotor, rightMotor;
 
     public TankDriveSubsystem(HardwareMap hardwareMap, MultipleTelemetry telemetry, DataLogger dataLogger) {
         this.telemetry = telemetry;
         this.dataLogger = dataLogger;
 
         this.getDataLogger().addData(DataLogger.DataType.INFO, this.getClass().getSimpleName() + ": Getting motors");
-        this.rightMotor = new MotorEx(hardwareMap, "right_wheels");
-        this.leftMotor = new MotorEx(hardwareMap, "left_wheels");
+//        this.rightMotor = new MotorEx(hardwareMap, "right_wheels");
+//        this.leftMotor = new MotorEx(hardwareMap, "left_wheels");
+        this.leftMotor = new MotorGroup(
+                new MotorEx(hardwareMap, MotorMap.LEG_FRONT_LEFT.getId()),
+                new MotorEx(hardwareMap, MotorMap.LEG_BACK_LEFT.getId())
+        );
+        this.rightMotor = new MotorGroup(
+                new MotorEx(hardwareMap, MotorMap.LEG_FRONT_RIGHT.getId()),
+                new MotorEx(hardwareMap, MotorMap.LEG_BACK_RIGHT.getId())
+        );
+        this.rightMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        this.leftMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         this.rightMotor.setInverted(true);
     }
 

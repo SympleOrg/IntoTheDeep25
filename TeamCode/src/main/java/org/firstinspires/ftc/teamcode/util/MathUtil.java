@@ -14,4 +14,8 @@ public class MathUtil {
     public static double encoderTicksToMeter(double ticks) {
         return ticks * RobotConstants.DriveConstants.METERS_PER_TICK;
     }
+
+    public static double metersToInch(double meter) {
+        return meter * 39.3700787;
+    }
 }
