@@ -18,7 +18,7 @@ public class IntakeYJointSubsystem extends SubsystemBase implements LoggerSubsys
     private final MultipleTelemetry telemetry;
     private final DataLogger dataLogger;
 
-    private IntakeJointConstants.JointYState state;
+    private IntakeJointConstants.JointYState state = IntakeJointConstants.JointYState.ZERO;
 
     public IntakeYJointSubsystem(HardwareMap hardwareMap, MultipleTelemetry telemetry, DataLogger dataLogger) {
         dataLogger.addData(DataLogger.DataType.INFO, "Initializing IntakeYJointSubsystem.");
@@ -58,5 +58,13 @@ public class IntakeYJointSubsystem extends SubsystemBase implements LoggerSubsys
                 this.moveToState(state1),
                 () -> this.state == state1
         );
+    }
+
+    public Command rotateCW() {
+        return new InstantCommand(() -> this.setState(this.state.getPrevious()), this);
+    }
+
+    public Command rotateC() {
+        return new InstantCommand(() -> this.setState(this.state.getNext()), this);
     }
 }

@@ -18,7 +18,7 @@ public class RobotPositionManager {
     private final MotorEx leftDeadWheel;
     private final MotorEx backDeadWheel;
 
-    private final double startingAngle;
+    private double startingAngle;
 
     private static RobotPositionManager instance;
 
@@ -74,5 +74,9 @@ public class RobotPositionManager {
 
     public double getBackWheelDistanceDriven() {
         return MathUtil.encoderTicksToMeter(this.backDeadWheel.getCurrentPosition());
+    }
+
+    public void resetHeading() {
+        this.startingAngle = getHeadingByGyro();
     }
 }

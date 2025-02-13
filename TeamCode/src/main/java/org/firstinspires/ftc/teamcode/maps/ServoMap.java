@@ -14,7 +14,7 @@ public enum ServoMap {
     SCORER("scorer"),
     INTAKE("intake"),
     INTAKE_X_JOINT("intake_x_joint"),
-    INTAKE_Y_JOINT("intake_Y_joint");
+    INTAKE_Y_JOINT("intake_y_joint");
 
     private final String id;
 

@@ -37,7 +37,7 @@ public class AutoRobotController extends RobotControllerBase {
 
     @Override
     public void postInitialize() {
-        this.intakeXJointSubsystem.moveToState(RobotConstants.IntakeJointConstants.JointXState.CLOSED).schedule();
+        this.intakeXJointSubsystem.moveToState(RobotConstants.IntakeJointConstants.JointXState.BASKET).schedule();
         new StrafeInAngleMecanumCommand(this.mecanumDriveSubsystem, 90, 0.4).schedule();
     }
 

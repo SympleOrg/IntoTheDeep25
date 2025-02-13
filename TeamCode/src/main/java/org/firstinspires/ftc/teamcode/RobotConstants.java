@@ -5,6 +5,9 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 
 import org.firstinspires.ftc.teamcode.maps.MotorMap;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class RobotConstants {
     public static class DriveConstants {
         public static final double TICKS_PER_REV = 2000;
@@ -96,8 +99,8 @@ public class RobotConstants {
     public static class ClawConstants {
 
         public enum ClawState {
-            OPEN(120),
-            CLOSE(170);
+            OPEN(0),
+            CLOSE(50);
             private final double deg;
 
             ClawState(double deg) {
@@ -113,8 +116,8 @@ public class RobotConstants {
     public static class IntakeConstants {
 
         public enum IntakeState {
-            OPEN(0),
-            CLOSE(0);
+            OPEN(30),
+            CLOSE(160);
 
             private final double deg;
 
@@ -130,8 +133,8 @@ public class RobotConstants {
 
     public static class ScorerConstants {
         public enum ScorerState {
-            SCORE(106),
-            TAKE(30);
+            SCORE(120),
+            TAKE(20);
 
             private final double deg;
 
@@ -147,10 +150,9 @@ public class RobotConstants {
 
     public static class IntakeJointConstants {
         public enum JointXState {
-            TAKE(36),
-            PRETAKE(65),
-            HUMAN_PLAYER(110),
-            CLOSED(260);
+            TAKE(25),
+            HUMAN_PLAYER(120),
+            BASKET(270);
 
             private final double deg;
 
@@ -164,16 +166,39 @@ public class RobotConstants {
         }
 
         public enum JointYState {
-            REST(0),
-            BASKET(0);
-            private final double deg;
+            CW_90(0),
+            CW_45(1),
+            ZERO(2),
+            C_45(3),
+            C_90(4);
 
-            JointYState(double deg) {
-                this.deg = deg;
+            private static final Map<Integer, JointYState> POSITIONS = new HashMap<>();
+
+            static {
+                for (JointYState state : JointYState.values()) {
+                    POSITIONS.put(state.index, state);
+                }
+            }
+
+            private final double OFFSET = 50;
+            private final double JUMP = 49; // in deg
+
+            private final int index;
+
+            JointYState(int index) {
+                this.index = index;
             }
 
             public double getDeg() {
-                return deg;
+                return index * JUMP + OFFSET;
+            }
+
+            public JointYState getPrevious() {
+                return POSITIONS.getOrDefault(index - 1, this);
+            }
+
+            public JointYState getNext() {
+                return POSITIONS.getOrDefault(index + 1, this);
             }
         }
     }
