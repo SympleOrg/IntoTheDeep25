@@ -12,7 +12,8 @@ import org.firstinspires.ftc.teamcode.subsystems.driveTrain.commands.mecanumDriv
 import org.firstinspires.ftc.teamcode.subsystems.elevator.ElevatorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.extender.ExtenderSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.intakejoint.IntakeJointSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.intakejoint.IntakePitchJointSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.intakejoint.IntakeRollJointSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.scorer.ScorerSubsystem;
 import org.firstinspires.ftc.teamcode.util.controlcommands.ActuatorCommands;
 import org.firstinspires.ftc.teamcode.util.controlcommands.DriverCommands;
@@ -27,7 +28,8 @@ public class TeleOpRobotController extends RobotControllerBase {
     private final IntakeSubsystem intakeSubsystem;
     private final ElevatorSubsystem elevatorSubsystem;
     private final ExtenderSubsystem extenderSubsystem;
-    private final IntakeJointSubsystem intakeJointSubsystem;
+    private final IntakePitchJointSubsystem intakePitchJointSubsystem;
+    private final IntakeRollJointSubsystem intakeRollJointSubsystem;
 
     private final DriverCommands driverCommands;
     private final ActuatorCommands actuatorCommands;
@@ -47,7 +49,8 @@ public class TeleOpRobotController extends RobotControllerBase {
         this.intakeSubsystem = new IntakeSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
         this.elevatorSubsystem = new ElevatorSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
         this.extenderSubsystem = new ExtenderSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
-        this.intakeJointSubsystem = new IntakeJointSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
+        this.intakePitchJointSubsystem = new IntakePitchJointSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
+        this.intakeRollJointSubsystem = new IntakeRollJointSubsystem(this.getHardwareMap(), this.getTelemetry(), this.getDataLogger());
 
         this.driverCommands = new DriverCommands(
                 mecanumDriveSubsystem,
@@ -56,7 +59,8 @@ public class TeleOpRobotController extends RobotControllerBase {
                 intakeSubsystem,
                 elevatorSubsystem,
                 extenderSubsystem,
-                intakeJointSubsystem
+                intakePitchJointSubsystem,
+                intakeRollJointSubsystem
         );
 
         this.actuatorCommands = new ActuatorCommands(
@@ -66,7 +70,8 @@ public class TeleOpRobotController extends RobotControllerBase {
                 intakeSubsystem,
                 elevatorSubsystem,
                 extenderSubsystem,
-                intakeJointSubsystem
+                intakePitchJointSubsystem,
+                intakeRollJointSubsystem
         );
     }
 
@@ -79,40 +84,50 @@ public class TeleOpRobotController extends RobotControllerBase {
                 .whenPressed(() -> this.mecanumDriveSubsystem.setDriveSpeed(DriveConstants.DriveSpeed.SLOW));
 
         this.driverController.getGamepadButton(GamepadKeys.Button.Y)
-                .whenPressed(this.driverCommands.toggleClaw());
+                .whenPressed(this.driverCommands.toggleChamberElevator());
 
         this.driverController.getGamepadButton(GamepadKeys.Button.B)
-                .whenPressed(this.driverCommands.scoreBasket());
+                .whenPressed(this.driverCommands.toggleClaw());
 
         this.driverController.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(this.driverCommands.intakeToScorer());
+                .whenPressed(this.driverCommands.resetDrive());
 
-        this.driverController.getGamepadButton(GamepadKeys.Button.X)
-                .whenPressed(this.driverCommands.goToDefaultStates());
+        new Trigger()
+                .or(this.driverController.getGamepadButton(GamepadKeys.Button.DPAD_UP))
+                .or(this.driverController.getGamepadButton(GamepadKeys.Button.DPAD_DOWN))
+                .or(this.driverController.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT))
+                .or(this.driverController.getGamepadButton(GamepadKeys.Button.DPAD_LEFT))
+                .whenActive(this.driverCommands.goToDefaultActionStates());
+
+        new Trigger(() -> this.driverController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) >= 0.1)
+                .whenActive(this.driverCommands.elevatorGoMax());
+
+        new Trigger(() -> this.driverController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) >= 0.1)
+                .whenActive(this.driverCommands.elevatorGoMin());
 
         this.actionController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenPressed(this.actuatorCommands.toggleChamberElevator());
+                .whenPressed(this.actuatorCommands.rotateCW());
 
-        this.actionController.getGamepadButton(GamepadKeys.Button.B)
-                .whenPressed(this.actuatorCommands.goToBottomBasket());
-
-        this.actionController.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(this.actuatorCommands.goToTopBasket());
+        this.actionController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenPressed(this.actuatorCommands.rotateC());
 
         this.actionController.getGamepadButton(GamepadKeys.Button.Y)
-                .whenPressed(this.actuatorCommands.moveJointToHumanPlayer());
+                .whenPressed(this.actuatorCommands.intakeGoBasket());
 
         this.actionController.getGamepadButton(GamepadKeys.Button.X)
-                .whenPressed(this.actuatorCommands.togglePretake());
+                .whenPressed(this.actuatorCommands.intakeGoHuman());
+
+        this.actionController.getGamepadButton(GamepadKeys.Button.A)
+                .whenPressed(this.actuatorCommands.intakeGoTake());
+
+        this.actionController.getGamepadButton(GamepadKeys.Button.B)
+                .whenPressed(this.actuatorCommands.toggleBasket());
 
         new Trigger(() -> this.actionController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1)
-                .whenActive(this.actuatorCommands.takeGamePiece());
+                .whenActive(this.actuatorCommands.openIntake());
 
         new Trigger(() -> this.actionController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1)
-                .whenActive(this.actuatorCommands.dropGamePiece());
-
-        new Trigger(() -> this.actionController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) <= 0.1 && this.actionController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) <= 0.1)
-                .whileActiveContinuous(this.actuatorCommands.stopIntake());
+                .whenActive(this.actuatorCommands.closeIntake());
 
         new Trigger(() -> Math.abs(this.actionController.getRightY()) > 0.1)
                 .whenActive(this.actuatorCommands.controlExtenderWithJoystick(this.actionController));
@@ -131,7 +146,9 @@ public class TeleOpRobotController extends RobotControllerBase {
 
     @Override
     public void postInitialize() {
-        this.intakeJointSubsystem.moveToState(RobotConstants.IntakeJointConstants.JointState.CLOSED).schedule();
+        this.intakeSubsystem.goToState(IntakeConstants.IntakeState.CLOSE).schedule();
+        this.intakeRollJointSubsystem.moveToState(IntakeJointConstants.JointRollState.ZERO).schedule();
+        this.intakePitchJointSubsystem.moveToState(IntakeJointConstants.JointPitchState.BASKET).schedule();
     }
 
     @Override
