@@ -19,6 +19,8 @@ public class RobotConstants {
         public static final double METERS_PER_REV = (Math.PI * 2) * WHEEL_RADIUS;
         public static final double METERS_PER_TICK = (METERS_PER_REV / (TICKS_PER_REV * GEAR_RATIO));
 
+        public static final double MOTOR_POWER_FIX = 0.08;
+
         public static final double Ks = 0;
 
         public static final RevHubOrientationOnRobot.LogoFacingDirection LOGO_FACING_DIRECTION = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;

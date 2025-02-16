@@ -23,7 +23,7 @@ public class TankArcadeDriveCommand extends CommandBase {
         double speedModifier = 1 - (this.controller.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) * 0.5f);
 
         double rotationSpeed = controller.getRightX() * 0.5f * (this.subsystem.isInverted() ? -1 : 1) * speedModifier;
-        double linerSpeed = controller.getLeftY() * 0.8f * (this.subsystem.isInverted() ? -1 : 1) * speedModifier;
+        double linerSpeed = -controller.getLeftY() * 0.8f * (this.subsystem.isInverted() ? -1 : 1) * speedModifier;
 
         double rawLeftSpeed = (linerSpeed + rotationSpeed);
         double rawRightSpeed = (linerSpeed - rotationSpeed);

@@ -49,7 +49,7 @@ public class MecanumDriveSubsystem extends SubsystemBase implements IDriveTrainS
             this.getDataLogger().addData(DataLogger.DataType.INFO, this.getClass().getSimpleName() + ": failed to set power to the motor '" + motor.name() + "'");
             return;
         }
-        m.set(power);
+        m.set(power + DriveConstants.MOTOR_POWER_FIX * Math.signum(power));
     }
 
     public void moveMotors(MecanumChassisUtils.MecanumWheelSpeeds mecanumWheelSpeeds) {
