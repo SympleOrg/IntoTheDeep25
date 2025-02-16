@@ -13,14 +13,14 @@ import org.firstinspires.ftc.teamcode.util.DataLogger;
 import org.firstinspires.ftc.teamcode.util.LoggerSubsystem;
 import org.firstinspires.ftc.teamcode.util.SympleServo;
 
-public class IntakeXJointSubsystem extends SubsystemBase implements LoggerSubsystem {
+public class IntakePitchJointSubsystem extends SubsystemBase implements LoggerSubsystem {
     private final SympleServo servo;
     private final MultipleTelemetry telemetry;
     private final DataLogger dataLogger;
 
-    private IntakeJointConstants.JointXState state;
+    private IntakeJointConstants.JointPitchState state;
 
-    public IntakeXJointSubsystem(HardwareMap hardwareMap, MultipleTelemetry telemetry, DataLogger dataLogger) {
+    public IntakePitchJointSubsystem(HardwareMap hardwareMap, MultipleTelemetry telemetry, DataLogger dataLogger) {
         dataLogger.addData(DataLogger.DataType.INFO, "Initializing IntakeXJointSubsystem.");
 
         this.telemetry = telemetry;
@@ -29,12 +29,12 @@ public class IntakeXJointSubsystem extends SubsystemBase implements LoggerSubsys
         this.servo = new SympleServo(hardwareMap, ServoMap.INTAKE_X_JOINT.getId(), 0, 300);
     }
 
-    private void setState(IntakeJointConstants.JointXState state) {
+    private void setState(IntakeJointConstants.JointPitchState state) {
         this.state = state;
         this.servo.turnToAngle(state.getDeg());
     }
 
-    public IntakeJointConstants.JointXState getState() {
+    public IntakeJointConstants.JointPitchState getState() {
         return state;
     }
 
@@ -48,11 +48,11 @@ public class IntakeXJointSubsystem extends SubsystemBase implements LoggerSubsys
         return telemetry;
     }
 
-    public Command moveToState(IntakeJointConstants.JointXState state) {
+    public Command moveToState(IntakeJointConstants.JointPitchState state) {
         return new InstantCommand(() -> this.setState(state), this);
     }
 
-    public Command toggleStates(IntakeJointConstants.JointXState state1, IntakeJointConstants.JointXState state2) {
+    public Command toggleStates(IntakeJointConstants.JointPitchState state1, IntakeJointConstants.JointPitchState state2) {
         return new ConditionalCommand(
                 this.moveToState(state2),
                 this.moveToState(state1),

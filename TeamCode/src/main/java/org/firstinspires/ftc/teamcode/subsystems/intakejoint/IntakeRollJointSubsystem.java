@@ -13,14 +13,14 @@ import org.firstinspires.ftc.teamcode.util.DataLogger;
 import org.firstinspires.ftc.teamcode.util.LoggerSubsystem;
 import org.firstinspires.ftc.teamcode.util.SympleServo;
 
-public class IntakeYJointSubsystem extends SubsystemBase implements LoggerSubsystem {
+public class IntakeRollJointSubsystem extends SubsystemBase implements LoggerSubsystem {
     private final SympleServo servo;
     private final MultipleTelemetry telemetry;
     private final DataLogger dataLogger;
 
-    private IntakeJointConstants.JointYState state = IntakeJointConstants.JointYState.ZERO;
+    private IntakeJointConstants.JointRollState state = IntakeJointConstants.JointRollState.ZERO;
 
-    public IntakeYJointSubsystem(HardwareMap hardwareMap, MultipleTelemetry telemetry, DataLogger dataLogger) {
+    public IntakeRollJointSubsystem(HardwareMap hardwareMap, MultipleTelemetry telemetry, DataLogger dataLogger) {
         dataLogger.addData(DataLogger.DataType.INFO, "Initializing IntakeYJointSubsystem.");
 
         this.telemetry = telemetry;
@@ -29,12 +29,12 @@ public class IntakeYJointSubsystem extends SubsystemBase implements LoggerSubsys
         this.servo = new SympleServo(hardwareMap, ServoMap.INTAKE_Y_JOINT.getId(), 0, 300);
     }
 
-    private void setState(IntakeJointConstants.JointYState state) {
+    private void setState(IntakeJointConstants.JointRollState state) {
         this.state = state;
         this.servo.turnToAngle(state.getDeg());
     }
 
-    public IntakeJointConstants.JointYState getState() {
+    public IntakeJointConstants.JointRollState getState() {
         return state;
     }
 
@@ -48,11 +48,11 @@ public class IntakeYJointSubsystem extends SubsystemBase implements LoggerSubsys
         return telemetry;
     }
 
-    public Command moveToState(IntakeJointConstants.JointYState state) {
+    public Command moveToState(IntakeJointConstants.JointRollState state) {
         return new InstantCommand(() -> this.setState(state), this);
     }
 
-    public Command toggleStates(IntakeJointConstants.JointYState state1, IntakeJointConstants.JointYState state2) {
+    public Command toggleStates(IntakeJointConstants.JointRollState state1, IntakeJointConstants.JointRollState state2) {
         return new ConditionalCommand(
                 this.moveToState(state2),
                 this.moveToState(state1),

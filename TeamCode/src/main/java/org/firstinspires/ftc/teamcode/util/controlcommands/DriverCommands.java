@@ -14,8 +14,8 @@ import org.firstinspires.ftc.teamcode.subsystems.driveTrain.MecanumDriveSubsyste
 import org.firstinspires.ftc.teamcode.subsystems.elevator.ElevatorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.extender.ExtenderSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.intakejoint.IntakeXJointSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.intakejoint.IntakeYJointSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.intakejoint.IntakePitchJointSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.intakejoint.IntakeRollJointSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.scorer.ScorerSubsystem;
 
 import java.util.HashMap;
@@ -27,8 +27,8 @@ public class DriverCommands {
     private final IntakeSubsystem intakeSubsystem;
     private final ElevatorSubsystem elevatorSubsystem;
     private final ExtenderSubsystem extenderSubsystem;
-    private final IntakeXJointSubsystem intakeXJointSubsystem;
-    private final IntakeYJointSubsystem intakeYJointSubsystem;
+    private final IntakePitchJointSubsystem intakePitchJointSubsystem;
+    private final IntakeRollJointSubsystem intakeRollJointSubsystem;
 
     public DriverCommands(
             MecanumDriveSubsystem mecanumDriveSubsystem,
@@ -37,8 +37,8 @@ public class DriverCommands {
             IntakeSubsystem intakeSubsystem,
             ElevatorSubsystem elevatorSubsystem,
             ExtenderSubsystem extenderSubsystem,
-            IntakeXJointSubsystem intakeXJointSubsystem,
-            IntakeYJointSubsystem intakeYJointSubsystem
+            IntakePitchJointSubsystem intakePitchJointSubsystem,
+            IntakeRollJointSubsystem intakeRollJointSubsystem
     ) {
         this.mecanumDriveSubsystem = mecanumDriveSubsystem;
         this.scorerSubsystem = scorerSubsystem;
@@ -46,8 +46,8 @@ public class DriverCommands {
         this.intakeSubsystem = intakeSubsystem;
         this.elevatorSubsystem = elevatorSubsystem;
         this.extenderSubsystem = extenderSubsystem;
-        this.intakeXJointSubsystem = intakeXJointSubsystem;
-        this.intakeYJointSubsystem = intakeYJointSubsystem;
+        this.intakePitchJointSubsystem = intakePitchJointSubsystem;
+        this.intakeRollJointSubsystem = intakeRollJointSubsystem;
     }
 
     public Command toggleClaw() {

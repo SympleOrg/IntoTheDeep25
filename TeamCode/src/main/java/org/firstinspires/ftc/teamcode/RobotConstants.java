@@ -149,14 +149,14 @@ public class RobotConstants {
     }
 
     public static class IntakeJointConstants {
-        public enum JointXState {
+        public enum JointPitchState {
             TAKE(25),
             HUMAN_PLAYER(120),
             BASKET(270);
 
             private final double deg;
 
-            JointXState(double deg) {
+            JointPitchState(double deg) {
                 this.deg = deg;
             }
 
@@ -165,17 +165,17 @@ public class RobotConstants {
             }
         }
 
-        public enum JointYState {
+        public enum JointRollState {
             CW_90(0),
             CW_45(1),
             ZERO(2),
             C_45(3),
             C_90(4);
 
-            private static final Map<Integer, JointYState> POSITIONS = new HashMap<>();
+            private static final Map<Integer, JointRollState> POSITIONS = new HashMap<>();
 
             static {
-                for (JointYState state : JointYState.values()) {
+                for (JointRollState state : JointRollState.values()) {
                     POSITIONS.put(state.index, state);
                 }
             }
@@ -185,7 +185,7 @@ public class RobotConstants {
 
             private final int index;
 
-            JointYState(int index) {
+            JointRollState(int index) {
                 this.index = index;
             }
 
@@ -193,11 +193,11 @@ public class RobotConstants {
                 return index * JUMP + OFFSET;
             }
 
-            public JointYState getPrevious() {
+            public JointRollState getPrevious() {
                 return POSITIONS.getOrDefault(index - 1, this);
             }
 
-            public JointYState getNext() {
+            public JointRollState getNext() {
                 return POSITIONS.getOrDefault(index + 1, this);
             }
         }
