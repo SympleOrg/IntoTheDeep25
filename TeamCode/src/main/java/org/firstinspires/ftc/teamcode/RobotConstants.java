@@ -116,8 +116,8 @@ public class RobotConstants {
     public static class IntakeConstants {
 
         public enum IntakeState {
-            OPEN(30),
-            CLOSE(160);
+            OPEN(0),
+            CLOSE(130);
 
             private final double deg;
 
