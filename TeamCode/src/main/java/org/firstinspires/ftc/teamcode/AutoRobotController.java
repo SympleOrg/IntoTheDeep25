@@ -47,7 +47,7 @@ public class AutoRobotController extends RobotControllerBase {
 
     @Override
     public void postInitialize() {
-        this.subsystemContainer.intakeJointSubsystem.moveToState(RobotConstants.IntakeJointConstants.JointState.CLOSED).schedule();
+//        this.subsystemContainer.intakeJointSubsystem.moveToState(RobotConstants.IntakeJointConstants.JointState.CLOSED).schedule();
         this.trajectory.followTrajectory(this.subsystemContainer);
     }
 
@@ -98,10 +98,12 @@ public class AutoRobotController extends RobotControllerBase {
             this.mecanumDriveSubsystem = new MecanumDrive(hardwareMap, pose2d);
             this.clawSubsystem = new ClawSubsystem(hardwareMap, telemetry, dataLogger);
             this.scorerSubsystem = new ScorerSubsystem(hardwareMap, telemetry, dataLogger);
-            this.intakeSubsystem = new IntakeSubsystem(hardwareMap, telemetry, dataLogger);
+//            this.intakeSubsystem = new IntakeSubsystem(hardwareMap, telemetry, dataLogger);
+            this.intakeSubsystem = null;
             this.elevatorSubsystem = new ElevatorSubsystem(hardwareMap, telemetry, dataLogger);
             this.extenderSubsystem = new ExtenderSubsystem(hardwareMap, telemetry, dataLogger);
-            this.intakeJointSubsystem = new IntakeJointSubsystem(hardwareMap, telemetry, dataLogger);
+//            this.intakeJointSubsystem = new IntakeJointSubsystem(hardwareMap, telemetry, dataLogger);
+            this.intakeJointSubsystem = null;
         }
 
         public MecanumDrive getMecanumDriveSubsystem() {
