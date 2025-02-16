@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.util.opModes;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -11,17 +13,52 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.maps.ServoMap;
 import org.firstinspires.ftc.teamcode.util.SympleServo;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import top.symple.symplegraphdisplay.SympleGraphDisplay;
+
 @Config
 @TeleOp(name = "Servo Tuner", group = "tune")
 public class ServoTunerOpMode extends CommandOpMode {
-    private final ServoMap servoName = ServoMap.INTAKE_JOINT;
+    private static HashMap<Integer, ServoMap> SERVOS = new HashMap<Integer, ServoMap>(){{
+        put(0, ServoMap.CLAW);
+        put(1, ServoMap.SCORER);
+        put(2, ServoMap.INTAKE);
+        put(3, ServoMap.INTAKE_X_JOINT);
+        put(4, ServoMap.INTAKE_Y_JOINT);
+    }};
+
+    public static int servoId = 0;
     public static double angle = 0;
 
     private GamepadEx gamepadEx;
+    private ServoMap servoName;
     private SympleServo servo;
+
     @Override
     public void initialize() {
         this.gamepadEx = new GamepadEx(gamepad2);
+
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+    }
+
+    private void initializeLoop() {
+        telemetry.addData("Servos List:", " ");
+        for(Map.Entry<Integer, ServoMap> entry : SERVOS.entrySet()) {
+            telemetry.addData(entry.getKey().toString(), entry.getValue().getId());
+        }
+
+        ServoMap currentServo = SERVOS.get(servoId);
+        if(currentServo != null) {
+            this.servoName = currentServo;
+        }
+
+        telemetry.addData("Current Servo", servoName != null ? servoName.getId() : "Unknown");
+        telemetry.update();
+    }
+
+    private void postInitialize() {
         servo = new SympleServo(hardwareMap, servoName.getId(), 0, 300, AngleUnit.DEGREES);
     }
 
@@ -32,5 +69,26 @@ public class ServoTunerOpMode extends CommandOpMode {
                         .whenPressed(new InstantCommand(() -> servo.turnToAngle(angle)));
         telemetry.addData("angle", angle);
         telemetry.update();
+    }
+
+    @Override
+    public void runOpMode() {
+        this.initialize();
+
+        // runs when in init mode
+        while (this.opModeInInit() && !this.isStopRequested()) {
+            initializeLoop();
+        }
+
+        this.waitForStart();
+
+        postInitialize();
+
+        // run the scheduler
+        while (!isStopRequested() && opModeIsActive()) {
+            this.run();
+        }
+
+        this.reset();
     }
 }

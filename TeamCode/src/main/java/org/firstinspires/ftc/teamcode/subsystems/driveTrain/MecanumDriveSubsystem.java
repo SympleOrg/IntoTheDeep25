@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.subsystems.driveTrain;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.command.Command;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
@@ -90,7 +92,7 @@ public class MecanumDriveSubsystem extends SubsystemBase implements IDriveTrainS
 
     @Override
     public double getHeading() {
-        return RobotPositionManager.getInstance().getHeadingByGyro();
+        return RobotPositionManager.getInstance().getRelativeHeading();
     }
 
     @Override
@@ -101,6 +103,10 @@ public class MecanumDriveSubsystem extends SubsystemBase implements IDriveTrainS
     @Override
     public MultipleTelemetry getTelemetry() {
         return this.telemetry;
+    }
+
+    public Command resetRotation() {
+        return new InstantCommand(RobotPositionManager.getInstance()::resetHeading, this);
     }
 
     public enum MotorNames {

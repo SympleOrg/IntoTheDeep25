@@ -8,15 +8,14 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.claw.ClawSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.driveTrain.MecanumDriveSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.driveTrain.commands.mecanumDrive.StrafeInAngleMecanumCommand;
 import org.firstinspires.ftc.teamcode.subsystems.elevator.ElevatorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.extender.ExtenderSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.intakejoint.IntakeJointSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.intakejoint.IntakeRollJointSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.scorer.ScorerSubsystem;
 import org.firstinspires.ftc.teamcode.trajectories.Trajectories;
 import org.firstinspires.ftc.teamcode.util.DataLogger;
+import org.firstinspires.ftc.teamcode.subsystems.intakejoint.IntakePitchJointSubsystem;
 import org.firstinspires.ftc.teamcode.util.opModes.SympleCommandOpMode;
 
 public class AutoRobotController extends RobotControllerBase {
@@ -47,7 +46,8 @@ public class AutoRobotController extends RobotControllerBase {
 
     @Override
     public void postInitialize() {
-//        this.subsystemContainer.intakeJointSubsystem.moveToState(RobotConstants.IntakeJointConstants.JointState.CLOSED).schedule();
+        this.subsystemContainer.intakeSubsystem.goToState(RobotConstants.IntakeConstants.IntakeState.CLOSE).schedule();
+        this.subsystemContainer.intakePitchJointSubsystem.moveToState(RobotConstants.IntakeJointConstants.JointPitchState.BASKET).schedule();
         this.trajectory.followTrajectory(this.subsystemContainer);
     }
 
@@ -92,18 +92,18 @@ public class AutoRobotController extends RobotControllerBase {
         private final IntakeSubsystem intakeSubsystem;
         private final ElevatorSubsystem elevatorSubsystem;
         private final ExtenderSubsystem extenderSubsystem;
-        private final IntakeJointSubsystem intakeJointSubsystem;
+        private final IntakeRollJointSubsystem intakeRollJointSubsystem;
+        private final IntakePitchJointSubsystem intakePitchJointSubsystem;
 
         private SubsystemContainer(HardwareMap hardwareMap, MultipleTelemetry telemetry, DataLogger dataLogger, Pose2d pose2d) {
             this.mecanumDriveSubsystem = new MecanumDrive(hardwareMap, pose2d);
             this.clawSubsystem = new ClawSubsystem(hardwareMap, telemetry, dataLogger);
             this.scorerSubsystem = new ScorerSubsystem(hardwareMap, telemetry, dataLogger);
-//            this.intakeSubsystem = new IntakeSubsystem(hardwareMap, telemetry, dataLogger);
-            this.intakeSubsystem = null;
+            this.intakeSubsystem = new IntakeSubsystem(hardwareMap, telemetry, dataLogger);
             this.elevatorSubsystem = new ElevatorSubsystem(hardwareMap, telemetry, dataLogger);
             this.extenderSubsystem = new ExtenderSubsystem(hardwareMap, telemetry, dataLogger);
-//            this.intakeJointSubsystem = new IntakeJointSubsystem(hardwareMap, telemetry, dataLogger);
-            this.intakeJointSubsystem = null;
+            this.intakeRollJointSubsystem = new IntakeRollJointSubsystem(hardwareMap, telemetry, dataLogger);
+            this.intakePitchJointSubsystem = new IntakePitchJointSubsystem(hardwareMap, telemetry, dataLogger);
         }
 
         public MecanumDrive getMecanumDriveSubsystem() {
@@ -130,8 +130,12 @@ public class AutoRobotController extends RobotControllerBase {
             return extenderSubsystem;
         }
 
-        public IntakeJointSubsystem getIntakeJointSubsystem() {
-            return intakeJointSubsystem;
+        public IntakeRollJointSubsystem getIntakeRollJointSubsystem() {
+            return intakeRollJointSubsystem;
+        }
+
+        public IntakePitchJointSubsystem getIntakePitchJointSubsystem() {
+            return intakePitchJointSubsystem;
         }
     }
 }

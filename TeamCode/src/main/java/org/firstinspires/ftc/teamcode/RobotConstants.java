@@ -5,6 +5,9 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 
 import org.firstinspires.ftc.teamcode.maps.MotorMap;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class RobotConstants {
     public static class DriveConstants {
         public static final double TICKS_PER_REV = 2000;
@@ -61,7 +64,7 @@ public class RobotConstants {
         public static final double METERS_PER_TICK = (METERS_PER_REV / (MotorMap.ELEVATOR_LEFT.getTicksPerRev() * GEAR_RATIO));
 
         public enum ElevatorState {
-            BASKET_TOP(0.76),
+            BASKET_TOP(0.86),
             BASKET_BOTTOM(0.32),
             HUMAN_PLAYER(0),
             SCORE_TOP(0.45),
@@ -98,8 +101,8 @@ public class RobotConstants {
     public static class ClawConstants {
 
         public enum ClawState {
-            OPEN(120),
-            CLOSE(170);
+            OPEN(0),
+            CLOSE(50);
             private final double deg;
 
             ClawState(double deg) {
@@ -115,26 +118,25 @@ public class RobotConstants {
     public static class IntakeConstants {
 
         public enum IntakeState {
-            TAKE(1),
-            DROP(-1),
-            IDLE(0);
+            OPEN(0),
+            CLOSE(130);
 
-            private final double power;
+            private final double deg;
 
-            IntakeState(double power) {
-                this.power = power;
+            IntakeState(double deg) {
+                this.deg = deg;
             }
 
-            public double getPower() {
-                return power;
+            public double getDeg() {
+                return deg;
             }
         }
     }
 
     public static class ScorerConstants {
         public enum ScorerState {
-            SCORE(65),
-            TAKE(0);
+            SCORE(120),
+            TAKE(20);
 
             private final double deg;
 
@@ -149,20 +151,56 @@ public class RobotConstants {
     }
 
     public static class IntakeJointConstants {
-        public enum JointState {
-            TAKE(36),
-            PRETAKE(65),
-            HUMAN_PLAYER(110),
-            CLOSED(250);
+        public enum JointPitchState {
+            TAKE(25),
+            HUMAN_PLAYER(120),
+            BASKET(270);
 
             private final double deg;
 
-            JointState(double deg) {
+            JointPitchState(double deg) {
                 this.deg = deg;
             }
 
             public double getDeg() {
                 return deg;
+            }
+        }
+
+        public enum JointRollState {
+            CW_90(0),
+            CW_45(1),
+            ZERO(2),
+            C_45(3),
+            C_90(4);
+
+            private static final Map<Integer, JointRollState> POSITIONS = new HashMap<>();
+
+            static {
+                for (JointRollState state : JointRollState.values()) {
+                    POSITIONS.put(state.index, state);
+                }
+            }
+
+            private final double OFFSET = 50;
+            private final double JUMP = 49; // in deg
+
+            private final int index;
+
+            JointRollState(int index) {
+                this.index = index;
+            }
+
+            public double getDeg() {
+                return index * JUMP + OFFSET;
+            }
+
+            public JointRollState getPrevious() {
+                return POSITIONS.getOrDefault(index - 1, this);
+            }
+
+            public JointRollState getNext() {
+                return POSITIONS.getOrDefault(index + 1, this);
             }
         }
     }
