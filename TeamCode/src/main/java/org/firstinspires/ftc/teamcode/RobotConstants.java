@@ -99,8 +99,9 @@ public class RobotConstants {
     public static class ClawConstants {
 
         public enum ClawState {
-            OPEN(0),
-            CLOSE(50);
+            OPEN(15),
+            CLOSE(60);
+
             private final double deg;
 
             ClawState(double deg) {
@@ -133,8 +134,8 @@ public class RobotConstants {
 
     public static class ScorerConstants {
         public enum ScorerState {
-            SCORE(120),
-            TAKE(20);
+            SCORE(80),
+            TAKE(0);
 
             private final double deg;
 
@@ -152,6 +153,7 @@ public class RobotConstants {
         public enum JointPitchState {
             TAKE(25),
             HUMAN_PLAYER(120),
+            SAFE_PLACE(181),
             BASKET(270);
 
             private final double deg;

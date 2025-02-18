@@ -68,18 +68,18 @@ public class DriverCommands {
     }
 
     public Command elevatorGoMax() {
-        return this.elevatorSubsystem.goToState(ElevatorConstants.ElevatorState.BASKET_TOP);
+        return this.elevatorSubsystem.goToState(ElevatorConstants.ElevatorState.BASKET_TOP, this.intakePitchJointSubsystem);
     }
 
     public Command elevatorGoMin() {
-        return this.elevatorSubsystem.goToState(ElevatorConstants.ElevatorState.REST);
+        return this.elevatorSubsystem.goToState(ElevatorConstants.ElevatorState.REST, this.intakePitchJointSubsystem);
     }
 
     public Command toggleChamberElevator() {
         return new SelectCommand(
                 new HashMap<Object, Command>(){{
-                    put("up", DriverCommands.this.elevatorSubsystem.goToState(RobotConstants.ElevatorConstants.ElevatorState.SCORE_TOP));
-                    put("down", DriverCommands.this.elevatorSubsystem.goToState(RobotConstants.ElevatorConstants.ElevatorState.REST));
+                    put("up", DriverCommands.this.elevatorSubsystem.goToState(RobotConstants.ElevatorConstants.ElevatorState.SCORE_TOP, DriverCommands.this.intakePitchJointSubsystem));
+                    put("down", DriverCommands.this.elevatorSubsystem.goToState(RobotConstants.ElevatorConstants.ElevatorState.REST, DriverCommands.this.intakePitchJointSubsystem));
                     put("score", new ParallelCommandGroup(
                             DriverCommands.this.elevatorSubsystem.scoreOnChamber(),
                             new SequentialCommandGroup(

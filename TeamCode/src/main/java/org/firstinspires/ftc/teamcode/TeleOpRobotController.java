@@ -124,10 +124,7 @@ public class TeleOpRobotController extends RobotControllerBase {
                 .whenPressed(this.actuatorCommands.toggleBasket());
 
         new Trigger(() -> this.actionController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1)
-                .whenActive(this.actuatorCommands.openIntake());
-
-        new Trigger(() -> this.actionController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1)
-                .whenActive(this.actuatorCommands.closeIntake());
+                .whenActive(this.actuatorCommands.toggleIntake());
 
         new Trigger(() -> Math.abs(this.actionController.getRightY()) > 0.1)
                 .whenActive(this.actuatorCommands.controlExtenderWithJoystick(this.actionController));

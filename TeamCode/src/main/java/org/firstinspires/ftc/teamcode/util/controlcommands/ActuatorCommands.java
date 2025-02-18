@@ -43,12 +43,8 @@ public class ActuatorCommands {
         this.intakeRollJointSubsystem = intakeRollJointSubsystem;
     }
 
-    public Command openIntake() {
-        return this.intakeSubsystem.goToState(RobotConstants.IntakeConstants.IntakeState.OPEN);
-    }
-
-    public Command closeIntake() {
-        return this.intakeSubsystem.goToState(RobotConstants.IntakeConstants.IntakeState.CLOSE);
+    public Command toggleIntake() {
+        return this.intakeSubsystem.toggleStates(RobotConstants.IntakeConstants.IntakeState.OPEN, RobotConstants.IntakeConstants.IntakeState.CLOSE);
     }
 
     public Command rotateCW() {

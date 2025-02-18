@@ -12,9 +12,11 @@ import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
+import org.firstinspires.ftc.teamcode.RobotConstants;
 import org.firstinspires.ftc.teamcode.RobotConstants.ElevatorConstants;
 import org.firstinspires.ftc.teamcode.maps.MotorMap;
 import org.firstinspires.ftc.teamcode.maps.SensorMap;
+import org.firstinspires.ftc.teamcode.subsystems.intakejoint.IntakePitchJointSubsystem;
 import org.firstinspires.ftc.teamcode.util.DataLogger;
 import org.firstinspires.ftc.teamcode.util.LoggerSubsystem;
 
@@ -97,8 +99,15 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggerSubsystem 
         return new ElevatorGoToPositionCommand(this, meters);
     }
 
-    public Command goToState(ElevatorConstants.ElevatorState state) {
+    public Command goToState(ElevatorConstants.ElevatorState state, IntakePitchJointSubsystem pitchJointSubsystem) {
         return new InstantCommand(() -> this.state = state, this)
+                .andThen(
+                        new ConditionalCommand(
+                                pitchJointSubsystem.moveToState(RobotConstants.IntakeJointConstants.JointPitchState.SAFE_PLACE),
+                                new InstantCommand(),
+                                () -> pitchJointSubsystem.getState() == RobotConstants.IntakeJointConstants.JointPitchState.BASKET
+                        )
+                )
                 .andThen(goToPosition(state.getMeters()));
     }
 
@@ -116,10 +125,10 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggerSubsystem 
         );
     }
 
-    public Command toggleStates(ElevatorConstants.ElevatorState state1, ElevatorConstants.ElevatorState state2) {
+    public Command toggleStates(IntakePitchJointSubsystem pitchJointSubsystem, ElevatorConstants.ElevatorState state1, ElevatorConstants.ElevatorState state2) {
         return new ConditionalCommand(
-                this.goToState(state2),
-                this.goToState(state1),
+                this.goToState(state2, pitchJointSubsystem),
+                this.goToState(state1, pitchJointSubsystem),
                 () -> this.state == state1
         );
     }
