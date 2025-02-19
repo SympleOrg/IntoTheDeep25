@@ -33,7 +33,7 @@ public class TurnToFLLCommand extends CommandBase {
     @Override
     public void initialize() {
         turnController = new PIDController(Kp, Ki, Kd);
-        this.currentAngle = Rotation2d.fromDegrees(driveTrain.getHeading());
+        this.currentAngle = Rotation2d.fromDegrees(Math.IEEEremainder(driveTrain.getHeading(), 360));
         turnController.setSetPoint(currentAngle.plus(targetAngle).getDegrees());
         turnController.setTolerance(2);
 
@@ -44,7 +44,11 @@ public class TurnToFLLCommand extends CommandBase {
     @Override
     public void execute() {
         currentAngle = Rotation2d.fromDegrees(driveTrain.getHeading());
-        double rotSpeed = turnController.calculate(currentAngle.getDegrees());
+        double rotSpeed = turnController.calculate(Math.IEEEremainder(this.turnController.getSetPoint() - currentAngle.getDegrees(), 360));
+
+        this.driveTrain.getTelemetry().addData("Rotation Err", turnController.getPositionError());
+        this.driveTrain.getTelemetry().addData("Current Rotation", currentAngle.getDegrees() - turnController.getSetPoint() - targetAngle.getDegrees());
+        this.driveTrain.getTelemetry().addData("Rotation Speed", rotSpeed);
 
         MecanumChassisUtils.MecanumWheelSpeeds speeds =
                 MecanumChassisUtils.chassisSpeedToWheelSpeeds(new Vector2d(), rotSpeed);
