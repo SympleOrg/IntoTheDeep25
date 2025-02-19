@@ -8,7 +8,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public enum Trajectories {
-    THREE_GAME_PIECE(ThreeGamePieceTrajectory::new);
+    THREE_GAME_PIECE(ThreeGamePieceTrajectory::new),
+    TEST(Test::new);
 
     private Function<AutoRobotController.SubsystemContainer, ITrajectory> builder;
 

@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.controller.PController;
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.controller.PIDFController;
 
 import org.firstinspires.ftc.teamcode.RobotConstants;
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.IDriveTrainSubsystem;
@@ -13,11 +14,12 @@ import org.firstinspires.ftc.teamcode.util.DataLogger;
 @Config
 public class DriveDistanceDriveCommand extends CommandBase {
     public static double Kp = 2;
-    public static double Ki = 0.8;
+    public static double Ki = 1.5;
     public static double Kd = 0.25;
+    public static double Kf = 0.25;
     public static double MAX_POWER = 0.75;
 
-    private final PIDController pController;
+    private final PIDFController pController;
     private final double finalPos;
 
     private double STARTING_POS;
@@ -30,7 +32,7 @@ public class DriveDistanceDriveCommand extends CommandBase {
 
         this.finalPos = meters;
 
-        this.pController = new PController(Kp, Ki, Kd);
+        this.pController = new PIDFController(Kp, Ki, Kd, Kf);
         this.pController.setTolerance(0.02);
     }
 

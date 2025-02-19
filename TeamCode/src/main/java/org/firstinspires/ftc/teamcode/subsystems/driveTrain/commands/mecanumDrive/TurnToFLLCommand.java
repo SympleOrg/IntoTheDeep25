@@ -12,9 +12,9 @@ import org.firstinspires.ftc.teamcode.util.MecanumChassisUtils;
 
 @Config
 public class TurnToFLLCommand extends CommandBase {
-    public static double Kp = 0.08;
-    public static double Ki = 0;
-    public static double Kd = 0.001;
+    public static double Kp = 0.035;
+    public static double Ki = 1;
+    public static double Kd = 0.01;
 
     private MecanumDriveSubsystem driveTrain;
     private PIDController turnController;
@@ -33,8 +33,8 @@ public class TurnToFLLCommand extends CommandBase {
     @Override
     public void initialize() {
         turnController = new PIDController(Kp, Ki, Kd);
-        this.currentAngle = Rotation2d.fromDegrees(Math.IEEEremainder(driveTrain.getHeading(), 360));
-        turnController.setSetPoint(currentAngle.plus(targetAngle).getDegrees());
+        this.currentAngle = Rotation2d.fromDegrees(driveTrain.getHeading());
+        turnController.setSetPoint(Math.IEEEremainder(currentAngle.plus(targetAngle).getDegrees(), 360));
         turnController.setTolerance(2);
 
         this.driveTrain.setZeroPowerBehaviour(MecanumDriveSubsystem.MotorNames.FRONT_RIGHT, Motor.ZeroPowerBehavior.FLOAT);
@@ -44,7 +44,7 @@ public class TurnToFLLCommand extends CommandBase {
     @Override
     public void execute() {
         currentAngle = Rotation2d.fromDegrees(driveTrain.getHeading());
-        double rotSpeed = turnController.calculate(Math.IEEEremainder(this.turnController.getSetPoint() - currentAngle.getDegrees(), 360));
+        double rotSpeed = turnController.calculate(this.turnController.getSetPoint() - Math.IEEEremainder(this.turnController.getSetPoint() - currentAngle.getDegrees(), 360));
 
         this.driveTrain.getTelemetry().addData("Rotation Err", turnController.getPositionError());
         this.driveTrain.getTelemetry().addData("Current Rotation", currentAngle.getDegrees() - turnController.getSetPoint() - targetAngle.getDegrees());
@@ -53,8 +53,8 @@ public class TurnToFLLCommand extends CommandBase {
         MecanumChassisUtils.MecanumWheelSpeeds speeds =
                 MecanumChassisUtils.chassisSpeedToWheelSpeeds(new Vector2d(), rotSpeed);
 
-        speeds.setFrontRight(0);
-        speeds.setBackLeft(0);
+//        speeds.setFrontRight(0);
+//        speeds.setBackLeft(0);
 
         this.driveTrain.moveMotors(speeds);
     }

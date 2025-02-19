@@ -7,11 +7,13 @@ import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.managers.RobotPositionManager;
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.driveTrain.commands.RotateRobotByDegCommand;
+import org.firstinspires.ftc.teamcode.subsystems.driveTrain.commands.mecanumDrive.TurnToFLLCommand;
 import org.firstinspires.ftc.teamcode.util.DataLogger;
 
 @TeleOp(name = "Mecanum Tuner", group = "tune")
@@ -32,15 +34,13 @@ public class MecanumTunerOpMode extends CommandOpMode {
         this.mecanumDriveSubsystem = new MecanumDriveSubsystem(hardwareMap, (MultipleTelemetry) telemetry, new DataLogger("MecanumTuner"));
 
         gamepadEx.getGamepadButton(GamepadKeys.Button.X)
-                .whenPressed(new RotateRobotByDegCommand(this.mecanumDriveSubsystem, angle));
+                .whenPressed(new TurnToFLLCommand(this.mecanumDriveSubsystem, Rotation2d.fromDegrees(angle)));
     }
 
     @Override
     public void run() {
         super.run();
-        telemetry.addData("Required Angle", angle);
         telemetry.addData("Current Angle", RobotPositionManager.getInstance().getRelativeHeading());
-        telemetry.addData("Error", angle - RobotPositionManager.getInstance().getRelativeHeading());
         telemetry.update();
     }
 }
