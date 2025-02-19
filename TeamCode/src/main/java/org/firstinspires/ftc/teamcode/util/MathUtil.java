@@ -14,4 +14,8 @@ public class MathUtil {
     public static double encoderTicksToMeter(double ticks) {
         return ticks * RobotConstants.DriveConstants.METERS_PER_TICK;
     }
+
+    public static double sympleModulo(double x, double y) {
+        return ((x % y) + y) % y;
+    }
 }

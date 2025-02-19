@@ -13,7 +13,7 @@ public class RobotConstants {
         public static final double TICKS_PER_REV = 2000;
 
         public static final double GEAR_RATIO = 1;
-        public static final double WHEEL_RADIUS = 0.045;
+        public static final double WHEEL_RADIUS = 0.024;
         public static final double WHEELS_DISTANCE = 0.19;
 
         public static final double METERS_PER_REV = (Math.PI * 2) * WHEEL_RADIUS;

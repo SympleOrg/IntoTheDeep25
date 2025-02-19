@@ -73,6 +73,10 @@ public class MecanumDriveSubsystem extends SubsystemBase implements IDriveTrainS
         this.moveMotor(MotorNames.BACK_RIGHT, right);
     }
 
+    public void setZeroPowerBehaviour(MotorNames motorName, Motor.ZeroPowerBehavior zeroPowerBehavior) {
+        this.motors.get(motorName).setZeroPowerBehavior(zeroPowerBehavior);
+    }
+
     @Override
     public double getForwardDistanceDriven() {
         return RobotPositionManager.getInstance().getRightWheelDistanceDriven();

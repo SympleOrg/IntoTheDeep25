@@ -55,7 +55,7 @@ public class RobotPositionManager {
     }
 
     public double getRelativeHeading() {
-        return this.getHeadingByGyro() - this.startingAngle;
+        return this.getHeadingByWheels() - this.startingAngle;
     }
 
     public double getHeadingByWheels() {
@@ -77,6 +77,6 @@ public class RobotPositionManager {
     }
 
     public void resetHeading() {
-        this.startingAngle = getHeadingByGyro();
+        this.startingAngle = getHeadingByWheels();
     }
 }

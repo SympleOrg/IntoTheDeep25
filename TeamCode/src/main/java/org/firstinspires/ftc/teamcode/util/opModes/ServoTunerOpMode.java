@@ -60,13 +60,14 @@ public class ServoTunerOpMode extends CommandOpMode {
 
     private void postInitialize() {
         servo = new SympleServo(hardwareMap, servoName.getId(), 0, 300, AngleUnit.DEGREES);
+
+        gamepadEx.getGamepadButton(GamepadKeys.Button.X)
+                .whenPressed(new InstantCommand(() -> servo.turnToAngle(angle)));
     }
 
     @Override
     public void run() {
         super.run();
-        gamepadEx.getGamepadButton(GamepadKeys.Button.X)
-                        .whenPressed(new InstantCommand(() -> servo.turnToAngle(angle)));
         telemetry.addData("angle", angle);
         telemetry.update();
     }

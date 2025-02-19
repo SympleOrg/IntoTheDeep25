@@ -76,6 +76,22 @@ public class MecanumChassisUtils {
             return speeds[3];
         }
 
+        public void setFrontLeft(double speed) {
+            speeds[0] = speed;
+        }
+
+        public void setFrontRight(double speed) {
+            speeds[1] = speed;
+        }
+
+        public void setBackLeft(double speed) {
+            speeds[2] = speed;
+        }
+
+        public void setBackRight(double speed) {
+            speeds[3] = speed;
+        }
+
         public double[] getSpeeds() {
             return speeds;
         }
