@@ -13,15 +13,16 @@ import java.util.function.Supplier;
 
 @Config
 public class StrafeInAngleMecanumCommand extends CommandBase {
-    public static double Kp = 1.8;
-    public static double Kf = 1.5;
-    public static double Ki = 1;
+    public static double Kp = 1;
+    public static double Kd = 0.3;
+    public static double Kf = 0.65;
+    public static double Ki = 0;
 
     public static double rotationKp = 0.02;
 
     private double angle;
     private final double meters;
-    private final double invert;
+    private double invert;
 
     private double STARTING_FORWARD_DIST = 0;
     private double STARTING_SIDE_DIST = 0;
@@ -43,18 +44,18 @@ public class StrafeInAngleMecanumCommand extends CommandBase {
 
         this.angle = angle;
         this.meters = meters;
-        this.invert = Math.signum(meters);
     }
 
     @Override
     public void initialize() {
         super.initialize();
+        this.invert = Math.signum(meters);
         this.angle -= 90 - angleFix;
 
         this.STARTING_FORWARD_DIST = this.subsystem.getForwardDistanceDriven();
         this.STARTING_SIDE_DIST = this.subsystem.getSideDistanceDriven();
 
-        this.pidfController = new PIDFController(Kp, Ki, 0, Kf);
+        this.pidfController = new PIDFController(Kp, Ki, Kd, Kf);
         this.pidfController.setTolerance(0.0185);
         this.pidfController.setSetPoint(this.meters);
 

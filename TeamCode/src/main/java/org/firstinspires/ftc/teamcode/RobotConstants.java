@@ -47,7 +47,7 @@ public class RobotConstants {
         public static double KG = 0.1;
 
         public static double P = 15;
-        public static double I = 0;
+        public static double I = 1;
         public static double D = 0;
 
         public static double RESET_POWER = -1;
@@ -55,7 +55,7 @@ public class RobotConstants {
         public static double MAX_HEIGHT = 0.94;
         public static double MIN_HEIGHT = -0.05;
 
-        public static double SCORE_OFFSET = -0.1;
+        public static double SCORE_OFFSET = -0.13;
 
         public static final double GEAR_RATIO = 1;
         public static final double WHEEL_RADIUS = 0.0382 * 0.5; // cry about it
@@ -101,8 +101,8 @@ public class RobotConstants {
     public static class ClawConstants {
 
         public enum ClawState {
-            OPEN(15),
-            CLOSE(60);
+            OPEN(75),
+            CLOSE(125);
 
             private final double deg;
 
@@ -136,7 +136,7 @@ public class RobotConstants {
 
     public static class ScorerConstants {
         public enum ScorerState {
-            SCORE(80),
+            SCORE(95),
             TAKE(0);
 
             private final double deg;

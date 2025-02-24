@@ -13,8 +13,8 @@ public enum SensorMap {
     DEAD_WHEEL_RIGHT(MotorMap.LEG_FRONT_RIGHT.getId()),
     DEAD_WHEEL_LEFT(MotorMap.LEG_FRONT_LEFT.getId()),
     DEAD_WHEEL_BACK(MotorMap.LEG_BACK_LEFT.getId()),
+    CLAW_SENSOR("claw_sensor"),
     ELEVATOR_RESET("elevator_reset");
-
 
     private final String id;
 

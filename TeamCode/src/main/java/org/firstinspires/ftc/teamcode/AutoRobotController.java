@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -19,6 +20,7 @@ import org.firstinspires.ftc.teamcode.util.DataLogger;
 import org.firstinspires.ftc.teamcode.util.opModes.SympleCommandOpMode;
 
 public class AutoRobotController extends RobotControllerBase {
+    public static Rotation2d endRotation = new Rotation2d();
     private final SubsystemContainer subsystemContainer;
     private final Trajectories trajectory;
 
@@ -46,8 +48,12 @@ public class AutoRobotController extends RobotControllerBase {
 
     @Override
     public void postInitialize() {
+        StrafeInAngleMecanumCommand.updateAngle(0);
+        this.subsystemContainer.getClawSubsystem().moveToState(RobotConstants.ClawConstants.ClawState.CLOSE).schedule();
+        this.subsystemContainer.getClawSubsystem().moveToState(RobotConstants.ClawConstants.ClawState.CLOSE).schedule();
         this.subsystemContainer.getIntakePitchJointSubsystem().moveToState(RobotConstants.IntakeJointConstants.JointPitchState.BASKET).schedule();
         this.trajectory.getTrajectory(subsystemContainer).schedule();
+
     }
 
     @Override
@@ -57,7 +63,7 @@ public class AutoRobotController extends RobotControllerBase {
 
     @Override
     public void postRun() {
-
+        endRotation = Rotation2d.fromDegrees(this.subsystemContainer.mecanumDriveSubsystem.getForwardDistanceDriven());
     }
 
     public static class Builder extends RobotControllerBase.Builder {

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.managers;
 
+import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.hardware.bosch.BHI260IMU;
@@ -78,5 +79,9 @@ public class RobotPositionManager {
 
     public void resetHeading() {
         this.startingAngle = getHeadingByWheels();
+    }
+
+    public void setRotation(Rotation2d rotation) {
+        this.startingAngle = rotation.getDegrees();
     }
 }
